@@ -12,7 +12,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 5), () {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const WelcomeScreen()),
@@ -28,38 +28,39 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const Spacer(flex: 2),
             Container(
               width: 200,
               height: 200,
               decoration: BoxDecoration(
                 color: const Color(0xFFBBDEFB),
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(30),
               ),
-              child: Image.asset('assets/logo.png'),
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Image.asset('assets/logo.png'),
+              ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
             const Text(
               'TANAW',
               style: TextStyle(
                 color: Color(0xFF0D47A1),
-                fontSize: 28,
+                fontSize: 36,
                 fontWeight: FontWeight.bold,
-                letterSpacing: 2,
+                letterSpacing: 4,
               ),
             ),
-            const SizedBox(height: 40),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(4, (index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                  child: CircleAvatar(
-                    radius: 4,
-                    backgroundColor: Colors.black,
-                  ),
-                );
-              }),
+            const Spacer(flex: 3),
+            const Text(
+              '....',
+              style: TextStyle(
+                color: Color(0xFF0D47A1),
+                fontSize: 40,
+                fontWeight: FontWeight.bold,
+              ),
             ),
+            const SizedBox(height: 60),
           ],
         ),
       ),
