@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'login_screen.dart';
+import 'signup_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
-  const WelcomeScreen({Key? key}) : super(key: key);
+  const WelcomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -32,41 +34,51 @@ class WelcomeScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 40),
-            OutlinedButton(
+            ElevatedButton(
               onPressed: () {
+                HapticFeedback.lightImpact();
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const LoginScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => const LoginScreen()),
                 );
               },
-              style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: Color(0xFF0D47A1), width: 2),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF153B6A),
+                minimumSize: const Size(double.infinity, 50),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
-                minimumSize: const Size.fromHeight(50),
               ),
               child: const Text(
                 'Log In',
                 style: TextStyle(
-                  color: Color(0xFF0D47A1),
+                  color: Colors.white,
                   fontSize: 18,
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
             OutlinedButton(
-              onPressed: () {}, // Placeholder for Sign Up
+              onPressed: () {
+                HapticFeedback.lightImpact();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SignupScreen()),
+                );
+              },
               style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: Color(0xFF0D47A1), width: 2),
+                minimumSize: const Size(double.infinity, 50),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
-                minimumSize: const Size.fromHeight(50),
+                side: const BorderSide(color: Color(0xFF153B6A), width: 1.5),
               ),
               child: const Text(
                 'Sign Up',
                 style: TextStyle(
-                  color: Color(0xFF0D47A1),
-                  fontSize: 18,
+                  fontSize: 16,
+                  color: Color(0xFF153B6A),
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
