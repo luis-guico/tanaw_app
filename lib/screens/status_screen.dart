@@ -1,10 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tanaw_app/screens/home_screen.dart';
+import 'package:tanaw_app/screens/profile_screen.dart';
 import 'package:tanaw_app/state/guardian_mode_state.dart';
-import 'package:tanaw_app/widgets/custom_bottom_nav_bar.dart';
+import 'package:tanaw_app/widgets/animated_bottom_nav_bar.dart';
+import 'package:tanaw_app/widgets/fade_page_route.dart';
 
-class StatusScreen extends StatelessWidget {
+class StatusScreen extends StatefulWidget {
   const StatusScreen({Key? key}) : super(key: key);
+
+  @override
+  _StatusScreenState createState() => _StatusScreenState();
+}
+
+class _StatusScreenState extends State<StatusScreen> {
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    if (index == _selectedIndex) return;
+
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        // Already on Status Screen
+        break;
+      case 1:
+        Navigator.pushReplacement(
+          context,
+          FadePageRoute(page: const HomeScreen()),
+        );
+        break;
+      case 2:
+        Navigator.pushReplacement(
+          context,
+          FadePageRoute(page: const ProfileScreen()),
+        );
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,14 +48,14 @@ class StatusScreen extends StatelessWidget {
         Provider.of<GuardianModeState>(context).isGuardianModeEnabled;
 
     final backgroundColor =
-        isGuardianMode ? const Color(0xFF1A3D7A) : Colors.grey.shade100;
+        isGuardianMode ? const Color(0xFF163C63) : Colors.grey.shade100;
     final appBarColor =
-        isGuardianMode ? const Color(0xFF153B6A) : Colors.white;
+        isGuardianMode ? const Color(0xFF163C63) : Colors.white;
     final appBarTextColor = isGuardianMode ? Colors.white : Colors.black87;
     final cardColor =
         isGuardianMode ? Colors.white.withAlpha(242) : Colors.white;
     final cardTitleColor =
-        isGuardianMode ? const Color(0xFF153B6A) : Colors.black87;
+        isGuardianMode ? const Color(0xFF163C63) : Colors.black87;
     final cardContentColor =
         isGuardianMode ? Colors.grey.shade800 : Colors.black54;
 
@@ -29,20 +65,25 @@ class StatusScreen extends StatelessWidget {
         automaticallyImplyLeading: false,
         backgroundColor: appBarColor,
         elevation: 2,
-        title: Row(
-          children: [
-            Image.asset('assets/logo.png', width: 30),
-            const SizedBox(width: 8),
-            Text(
-              'DEVICE STATUS',
-              style: TextStyle(
-                color: appBarTextColor,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 2,
+        title: Padding(
+          padding: const EdgeInsets.only(top: 10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset('assets/logo.png', width: 35),
+              const SizedBox(height: 4),
+              Text(
+                'TANAW',
+                style: TextStyle(
+                  color: appBarTextColor,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 2,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       body: Container(
@@ -50,8 +91,8 @@ class StatusScreen extends StatelessWidget {
             ? BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    const Color(0xFF2C5DA7).withAlpha(204),
-                    const Color(0xFF1A3D7A).withAlpha(230),
+                    const Color(0xFF163C63).withAlpha(204),
+                    const Color(0xFF163C63).withAlpha(230),
                   ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -113,7 +154,10 @@ class StatusScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: const CustomBottomNavBar(currentIndex: 0),
+      bottomNavigationBar: AnimatedBottomNavBar(
+        selectedIndex: _selectedIndex,
+        onItemTapped: _onItemTapped,
+      ),
     );
   }
 

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:tanaw_app/widgets/custom_bottom_nav_bar.dart';
+import 'package:tanaw_app/screens/profile_screen.dart';
+import 'package:tanaw_app/screens/status_screen.dart';
+import 'package:tanaw_app/widgets/animated_bottom_nav_bar.dart';
+import 'package:tanaw_app/widgets/fade_page_route.dart';
 import 'package:vibration/vibration.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,6 +19,33 @@ class _HomeScreenState extends State<HomeScreen> {
   String _lastDetectedObject = "Garbage Bin";
   String _deviceStatus = "Connected";
   String _batteryLevel = "80%";
+  int _selectedIndex = 1;
+
+  void _onItemTapped(int index) {
+    if (index == _selectedIndex) return;
+
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.pushReplacement(
+          context,
+          FadePageRoute(page: const StatusScreen()),
+        );
+        break;
+      case 1:
+        // Already on Home Screen
+        break;
+      case 2:
+        Navigator.pushReplacement(
+          context,
+          FadePageRoute(page: const ProfileScreen()),
+        );
+        break;
+    }
+  }
 
   @override
   void initState() {
@@ -49,20 +79,25 @@ class _HomeScreenState extends State<HomeScreen> {
           automaticallyImplyLeading: false,
           backgroundColor: Colors.white,
           elevation: 0,
-          title: Row(
-            children: [
-              Image.asset('assets/logo.png', width: 30),
-              const SizedBox(width: 8),
-              const Text(
-                'TANAW',
-                style: TextStyle(
-                  color: Color(0xFF0D47A1),
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 2,
+          title: Padding(
+            padding: const EdgeInsets.only(top: 10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.asset('assets/logo.png', width: 35),
+                const SizedBox(height: 4),
+                const Text(
+                  'TANAW',
+                  style: TextStyle(
+                    color: Color(0xFF163C63),
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 2,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         body: Padding(
@@ -88,7 +123,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        bottomNavigationBar: const CustomBottomNavBar(currentIndex: 1),
+        bottomNavigationBar: AnimatedBottomNavBar(
+          selectedIndex: _selectedIndex,
+          onItemTapped: _onItemTapped,
+        ),
       ),
     );
   }
@@ -123,21 +161,21 @@ class _HomeScreenState extends State<HomeScreen> {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 40.0),
       decoration: BoxDecoration(
-        border: Border.all(color: const Color(0xFF0D47A1), width: 1.5),
+        border: Border.all(color: const Color(0xFF163C63), width: 1.5),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
         children: [
           const Text(
             'Detected:',
-            style: TextStyle(fontSize: 20, color: Color(0xFF0D47A1)),
+            style: TextStyle(fontSize: 20, color: Color(0xFF163C63)),
           ),
           const SizedBox(height: 8),
           Text(
             _lastDetectedObject,
             style: const TextStyle(
               fontSize: 36,
-              color: Color(0xFF0D47A1),
+              color: Color(0xFF163C63),
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -159,7 +197,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF153B6A),
+        backgroundColor: const Color(0xFF163C63),
         minimumSize: const Size(double.infinity, 96),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),

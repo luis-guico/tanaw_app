@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:tanaw_app/widgets/custom_bottom_nav_bar.dart';
+import 'package:tanaw_app/screens/profile_screen.dart';
+import 'package:tanaw_app/screens/status_screen.dart';
+import 'package:tanaw_app/widgets/animated_bottom_nav_bar.dart';
+import 'package:tanaw_app/widgets/fade_page_route.dart';
 
 class GuardianHomeScreen extends StatefulWidget {
   const GuardianHomeScreen({Key? key}) : super(key: key);
@@ -13,6 +16,33 @@ class _GuardianHomeScreenState extends State<GuardianHomeScreen>
     with TickerProviderStateMixin {
   late AnimationController _animationController;
   final FlutterTts _flutterTts = FlutterTts();
+  int _selectedIndex = 1;
+
+  void _onItemTapped(int index) {
+    if (index == _selectedIndex) return;
+
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.pushReplacement(
+          context,
+          FadePageRoute(page: const StatusScreen()),
+        );
+        break;
+      case 1:
+        // Already on Guardian Home Screen
+        break;
+      case 2:
+        Navigator.pushReplacement(
+          context,
+          FadePageRoute(page: const ProfileScreen()),
+        );
+        break;
+    }
+  }
 
   final List<Map<String, dynamic>> _records = [
     {
@@ -69,25 +99,30 @@ class _GuardianHomeScreenState extends State<GuardianHomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0D47A1),
+      backgroundColor: const Color(0xFF163C63),
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: const Color(0xFF0D47A1),
+        backgroundColor: const Color(0xFF163C63),
         elevation: 0,
-        title: Row(
-          children: [
-            Image.asset('assets/logo.png', width: 30),
-            const SizedBox(width: 8),
-            const Text(
-              'TANAW',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 2,
+        title: Padding(
+          padding: const EdgeInsets.only(top: 10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset('assets/logo.png', width: 35),
+              const SizedBox(height: 4),
+              const Text(
+                'TANAW',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 2,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         actions: [
           IconButton(
@@ -134,7 +169,10 @@ class _GuardianHomeScreenState extends State<GuardianHomeScreen>
           ],
         ),
       ),
-      bottomNavigationBar: const CustomBottomNavBar(currentIndex: 1),
+      bottomNavigationBar: AnimatedBottomNavBar(
+        selectedIndex: _selectedIndex,
+        onItemTapped: _onItemTapped,
+      ),
     );
   }
 
@@ -207,11 +245,11 @@ class _GuardianHomeScreenState extends State<GuardianHomeScreen>
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: ExpansionTile(
-            leading: Icon(record['icon'], color: Color(0xFF0D47A1), size: 32),
+            leading: Icon(record['icon'], color: Color(0xFF163C63), size: 32),
             title: Text(
               'Encountered: ${record['type']}',
               style: const TextStyle(
-                color: Color(0xFF0D47A1),
+                color: Color(0xFF163C63),
                 fontWeight: FontWeight.bold,
               ),
             ),
