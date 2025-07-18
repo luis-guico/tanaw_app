@@ -72,7 +72,7 @@ class _PasswordChangedScreenState extends State<PasswordChangedScreen>
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: primaryColor.withOpacity(0.1),
+                        color: primaryColor.withAlpha(25),
                       ),
                       child: Icon(
                         Icons.check_rounded,

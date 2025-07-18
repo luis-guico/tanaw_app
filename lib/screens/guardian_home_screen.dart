@@ -4,6 +4,7 @@ import 'package:tanaw_app/screens/profile_screen.dart';
 import 'package:tanaw_app/screens/status_screen.dart';
 import 'package:tanaw_app/widgets/animated_bottom_nav_bar.dart';
 import 'package:tanaw_app/widgets/fade_page_route.dart';
+import 'package:tanaw_app/widgets/tanaw_logo.dart';
 
 class GuardianHomeScreen extends StatefulWidget {
   const GuardianHomeScreen({super.key});
@@ -99,31 +100,12 @@ class GuardianHomeScreenState extends State<GuardianHomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF163C63),
+      backgroundColor: const Color(0xFF102A43),
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: const Color(0xFF163C63),
+        backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Padding(
-          padding: const EdgeInsets.only(top: 10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Image.asset('assets/logo.png', width: 35),
-              const SizedBox(height: 4),
-              const Text(
-                'TANAW',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 2,
-                ),
-              ),
-            ],
-          ),
-        ),
+        title: const TanawLogo(isGuardianMode: true),
         actions: [
           IconButton(
             icon: const Icon(Icons.volume_up_outlined, color: Colors.white),
@@ -180,7 +162,7 @@ class GuardianHomeScreenState extends State<GuardianHomeScreen>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withAlpha(38),
+        color: const Color(0xFF0F3356),
         borderRadius: BorderRadius.circular(15),
       ),
       child: const Row(
@@ -219,7 +201,7 @@ class GuardianHomeScreenState extends State<GuardianHomeScreen>
           Chip(
             avatar: const Icon(Icons.check_circle, color: Colors.white, size: 20),
             label: const Text('Connected'),
-            backgroundColor: Colors.green.withAlpha(204),
+            backgroundColor: const Color(0xFF0F3356),
             labelStyle: const TextStyle(
                 color: Colors.white, fontWeight: FontWeight.bold),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -234,22 +216,19 @@ class GuardianHomeScreenState extends State<GuardianHomeScreen>
       itemCount: _records.length,
       itemBuilder: (context, index) {
         final record = _records[index];
-        final isEven = index % 2 == 0;
 
         return Card(
           elevation: 2,
           margin: const EdgeInsets.symmetric(vertical: 6),
-          color: isEven
-              ? Colors.lightBlue.shade50.withAlpha(230)
-              : Colors.white.withAlpha(242),
+          color: const Color(0xFF0F3356),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: ExpansionTile(
-            leading: Icon(record['icon'], color: const Color(0xFF163C63), size: 32),
+            leading: Icon(record['icon'], color: Colors.white, size: 32),
             title: Text(
               'Encountered: ${record['type']}',
               style: const TextStyle(
-                color: Color(0xFF163C63),
+                color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -257,7 +236,7 @@ class GuardianHomeScreenState extends State<GuardianHomeScreen>
               record['message'],
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontSize: 12),
+              style: const TextStyle(fontSize: 12, color: Colors.white70),
             ),
             children: [
               Padding(
@@ -268,19 +247,19 @@ class GuardianHomeScreenState extends State<GuardianHomeScreen>
                   children: [
                     Text(
                       record['message'],
-                      style: const TextStyle(color: Colors.black87),
+                      style: const TextStyle(color: Colors.white),
                     ),
                     const SizedBox(height: 8),
                     Row(
                       children: [
                         const Icon(Icons.location_on_outlined,
-                            size: 14, color: Colors.black54),
+                            size: 14, color: Colors.white70),
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(
                             record['location'],
                             style: const TextStyle(
-                                color: Colors.black54,
+                                color: Colors.white70,
                                 fontStyle: FontStyle.italic),
                           ),
                         ),
@@ -290,11 +269,11 @@ class GuardianHomeScreenState extends State<GuardianHomeScreen>
                     Row(
                       children: [
                         const Icon(Icons.access_time_filled_outlined,
-                            size: 14, color: Colors.black54),
+                            size: 14, color: Colors.white70),
                         const SizedBox(width: 4),
                         Text(
                           record['time'],
-                          style: const TextStyle(color: Colors.black54),
+                          style: const TextStyle(color: Colors.white70),
                         ),
                       ],
                     ),

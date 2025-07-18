@@ -5,6 +5,7 @@ import 'package:tanaw_app/screens/profile_screen.dart';
 import 'package:tanaw_app/screens/status_screen.dart';
 import 'package:tanaw_app/widgets/animated_bottom_nav_bar.dart';
 import 'package:tanaw_app/widgets/fade_page_route.dart';
+import 'package:tanaw_app/widgets/tanaw_logo.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -78,26 +79,7 @@ class HomeScreenState extends State<HomeScreen> {
           automaticallyImplyLeading: false,
           backgroundColor: Colors.white,
           elevation: 0,
-          title: Padding(
-            padding: const EdgeInsets.only(top: 10.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Image.asset('assets/logo.png', width: 35),
-                const SizedBox(height: 4),
-                const Text(
-                  'TANAW',
-                  style: TextStyle(
-                    color: Color(0xFF163C63),
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 2,
-                  ),
-                ),
-              ],
-            ),
-          ),
+          title: const TanawLogo(isGuardianMode: false),
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
@@ -144,13 +126,13 @@ class HomeScreenState extends State<HomeScreen> {
         Text(
           _deviceStatus,
           style: TextStyle(
-            color: Colors.green.shade700,
+            color: const Color(0xFF163C63),
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(width: 8),
-        Icon(Icons.check_circle, color: Colors.green.shade700, size: 24),
+        Icon(Icons.check_circle, color: const Color(0xFF163C63), size: 24),
       ],
     );
   }
@@ -162,6 +144,7 @@ class HomeScreenState extends State<HomeScreen> {
       decoration: BoxDecoration(
         border: Border.all(color: const Color(0xFF163C63), width: 1.5),
         borderRadius: BorderRadius.circular(16),
+        color: Colors.white,
       ),
       child: Column(
         children: [
@@ -182,7 +165,7 @@ class HomeScreenState extends State<HomeScreen> {
           Icon(
             Icons.volume_up,
             size: 50,
-            color: Colors.grey.shade700,
+            color: Colors.grey.shade600,
           ),
         ],
       ),
@@ -202,6 +185,8 @@ class HomeScreenState extends State<HomeScreen> {
           borderRadius: BorderRadius.circular(16),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        elevation: 5,
+        shadowColor: Colors.black.withAlpha(51),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,

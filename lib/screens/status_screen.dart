@@ -6,6 +6,7 @@ import 'package:tanaw_app/state/guardian_mode_state.dart';
 import 'package:tanaw_app/widgets/animated_bottom_nav_bar.dart';
 import 'package:tanaw_app/widgets/fade_page_route.dart';
 import 'package:tanaw_app/screens/guardian_home_screen.dart';
+import 'package:tanaw_app/widgets/tanaw_logo.dart';
 
 class StatusScreen extends StatefulWidget {
   const StatusScreen({super.key});
@@ -52,112 +53,73 @@ class StatusScreenState extends State<StatusScreen> {
     final isGuardianMode =
         Provider.of<GuardianModeState>(context).isGuardianModeEnabled;
 
-    final backgroundColor =
-        isGuardianMode ? const Color(0xFF163C63) : Colors.grey.shade100;
-    final appBarColor =
-        isGuardianMode ? const Color(0xFF163C63) : Colors.white;
-    final appBarTextColor = isGuardianMode ? Colors.white : Colors.black87;
     final cardColor =
-        isGuardianMode ? Colors.white.withAlpha(242) : Colors.white;
-    final cardTitleColor =
-        isGuardianMode ? const Color(0xFF163C63) : Colors.black87;
-    final cardContentColor =
-        isGuardianMode ? Colors.grey.shade800 : Colors.black54;
+        isGuardianMode ? const Color(0xFF0F3356) : Colors.white;
+    final cardTitleColor = isGuardianMode ? Colors.white : Colors.black87;
+    final cardContentColor = isGuardianMode ? Colors.white : Colors.black54;
 
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor:
+          isGuardianMode ? const Color(0xFF102A43) : Colors.white,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: appBarColor,
-        elevation: 2,
-        title: Padding(
-          padding: const EdgeInsets.only(top: 10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
+        backgroundColor: isGuardianMode ? Colors.transparent : Colors.white,
+        elevation: 0,
+        title: TanawLogo(isGuardianMode: isGuardianMode),
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(20.0),
+        children: [
+          _buildInfoCard(
+            cardColor: cardColor,
+            titleColor: cardTitleColor,
+            contentColor: cardContentColor,
+            title: 'Device Connection',
+            icon: Icons.wifi_tethering_rounded,
             children: [
-              Image.asset('assets/logo.png', width: 35),
-              const SizedBox(height: 4),
-              Text(
-                'TANAW',
-                style: TextStyle(
-                  color: appBarTextColor,
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 2,
-                ),
-              ),
+              _buildInfoRow('Status', 'Connected', cardContentColor,
+                  Icons.check_circle, Colors.green),
+              _buildInfoRow('Last Synced', '1 min ago', cardContentColor,
+                  Icons.sync_rounded),
+              _buildInfoRow('Signal Strength', 'Excellent', cardContentColor,
+                  Icons.signal_cellular_alt_rounded),
             ],
           ),
-        ),
-      ),
-      body: Container(
-        decoration: isGuardianMode
-            ? BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    const Color(0xFF163C63).withAlpha(204),
-                    const Color(0xFF163C63).withAlpha(230),
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-              )
-            : null,
-        child: ListView(
-          padding: const EdgeInsets.all(20.0),
-          children: [
-            _buildInfoCard(
-              cardColor: cardColor,
-              titleColor: cardTitleColor,
-              contentColor: cardContentColor,
-              title: 'Device Connection',
-              icon: Icons.wifi_tethering_rounded,
-              children: [
-                _buildInfoRow('Status', 'Connected', cardContentColor,
-                    Icons.check_circle, Colors.green),
-                _buildInfoRow('Last Synced', '1 min ago', cardContentColor,
-                    Icons.sync_rounded),
-                _buildInfoRow('Signal Strength', 'Excellent', cardContentColor,
-                    Icons.signal_cellular_alt_rounded),
-              ],
-            ),
-            const SizedBox(height: 20),
-            _buildInfoCard(
-              cardColor: cardColor,
-              titleColor: cardTitleColor,
-              contentColor: cardContentColor,
-              title: 'TANAW Glass Battery',
-              icon: Icons.battery_charging_full_rounded,
-              children: [
-                _buildInfoRow('Level', '92%', cardContentColor,
-                    Icons.battery_6_bar_rounded, Colors.teal),
-                _buildInfoRow(
-                    'Status', 'Charging', cardContentColor, Icons.power_rounded),
-              ],
-            ),
-            const SizedBox(height: 20),
-            _buildInfoCard(
-              cardColor: cardColor,
-              titleColor: cardTitleColor,
-              contentColor: cardContentColor,
-              title: 'User Information',
-              icon: Icons.person_pin_circle_rounded,
-              children: [
-                _buildInfoRow(
-                    'Current Mode',
-                    isGuardianMode ? 'Guardian' : 'Normal',
-                    cardContentColor,
-                    isGuardianMode
-                        ? Icons.security_rounded
-                        : Icons.person_outline_rounded,
-                    isGuardianMode ? Colors.blueAccent : Colors.grey),
-                _buildInfoRow('Last Known Location', 'Sto. Tomas, Batangas',
-                    cardContentColor, Icons.location_on_outlined),
-              ],
-            ),
-          ],
-        ),
+          const SizedBox(height: 20),
+          _buildInfoCard(
+            cardColor: cardColor,
+            titleColor: cardTitleColor,
+            contentColor: cardContentColor,
+            title: 'TANAW Glass Battery',
+            icon: Icons.battery_charging_full_rounded,
+            children: [
+              _buildInfoRow('Level', '92%', cardContentColor,
+                  Icons.battery_6_bar_rounded, Colors.teal),
+              _buildInfoRow(
+                  'Status', 'Charging', cardContentColor, Icons.power_rounded),
+            ],
+          ),
+          const SizedBox(height: 20),
+          _buildInfoCard(
+            cardColor: cardColor,
+            titleColor: cardTitleColor,
+            contentColor: cardContentColor,
+            title: 'User Information',
+            icon: Icons.person_pin_circle_rounded,
+            children: [
+              _buildInfoRow(
+                  'Current Mode',
+                  isGuardianMode ? 'Guardian' : 'Normal',
+                  cardContentColor,
+                  isGuardianMode
+                      ? Icons.security_rounded
+                      : Icons.person_outline_rounded,
+                  isGuardianMode ? Colors.blueAccent : Colors.grey),
+              _buildInfoRow('Last Known Location', 'Sto. Tomas, Batangas',
+                  cardContentColor, Icons.location_on_outlined),
+            ],
+          ),
+        ],
       ),
       bottomNavigationBar: AnimatedBottomNavBar(
         selectedIndex: _selectedIndex,
@@ -214,8 +176,7 @@ class StatusScreenState extends State<StatusScreen> {
         children: [
           Text(
             title,
-            style:
-                TextStyle(fontSize: 15, color: contentColor.withAlpha(230)),
+            style: TextStyle(fontSize: 15, color: contentColor.withAlpha(230)),
           ),
           const SizedBox(width: 16),
           Expanded(

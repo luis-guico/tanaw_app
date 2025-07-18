@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_tts/flutter_tts.dart';
 import 'package:tanaw_app/state/guardian_mode_state.dart';
+import 'package:tanaw_app/services/tts_service.dart';
 
 class NotificationSettingsScreen extends StatefulWidget {
   const NotificationSettingsScreen({super.key});
@@ -15,7 +15,7 @@ class NotificationSettingsScreen extends StatefulWidget {
 
 class NotificationSettingsScreenState
     extends State<NotificationSettingsScreen> {
-  final FlutterTts _flutterTts = FlutterTts();
+  late TtsService _ttsService;
 
   // VI User Settings
   bool _voiceAlerts = true;
@@ -30,22 +30,16 @@ class NotificationSettingsScreenState
   bool _lowBatteryWarning = true;
   bool _deviceDisconnected = true;
   bool _locationUpdates = true;
-  bool _guardianModeActivated = true;
 
   @override
   void initState() {
     super.initState();
+    _ttsService = TtsService(context);
     _loadSettings();
-    _initTts();
   }
 
-  Future<void> _initTts() async {
-    await _flutterTts.setLanguage("en-US");
-    await _flutterTts.setPitch(1.0);
-  }
-
-  Future<void> _speak(String text) async {
-    await _flutterTts.speak(text);
+  Future<void> _speak(String text, {bool forceSpeak = false}) async {
+    await _ttsService.speak(text, forceSpeak: forceSpeak);
   }
 
   Future<void> _loadSettings() async {
@@ -64,7 +58,6 @@ class NotificationSettingsScreenState
       _lowBatteryWarning = prefs.getBool('lowBatteryWarning') ?? true;
       _deviceDisconnected = prefs.getBool('deviceDisconnected') ?? true;
       _locationUpdates = prefs.getBool('locationUpdates') ?? true;
-      _guardianModeActivated = prefs.getBool('guardianModeActivated') ?? true;
     });
   }
 
@@ -81,9 +74,9 @@ class NotificationSettingsScreenState
         final theme = isGuardianMode ? _darkTheme : _lightTheme;
 
         return Scaffold(
-          backgroundColor: theme.backgroundColor,
+          backgroundColor: isGuardianMode ? theme.backgroundColor : Colors.white,
           appBar: AppBar(
-            backgroundColor: theme.backgroundColor,
+            backgroundColor: isGuardianMode ? theme.backgroundColor : Colors.white,
             elevation: 0,
             leading: IconButton(
               icon: Icon(Icons.arrow_back, color: theme.textColor),
@@ -167,7 +160,7 @@ class NotificationSettingsScreenState
         (value) {
           setState(() => _batteryAlerts = value);
           _updateSetting('batteryAlerts', value);
-          _speak('Battery Alerts ${value ? 'enabled' : 'disabled'}');
+          _speak('Battery Alerts ${value ? 'enabled' : 'disabled'}', forceSpeak: true);
         },
         theme,
       ),
@@ -178,7 +171,7 @@ class NotificationSettingsScreenState
         (value) {
           setState(() => _connectionStatus = value);
           _updateSetting('connectionStatus', value);
-          _speak('Connection Status alerts ${value ? 'enabled' : 'disabled'}');
+          _speak('Connection Status alerts ${value ? 'enabled' : 'disabled'}', forceSpeak: true);
         },
         theme,
       ),
@@ -206,6 +199,7 @@ class NotificationSettingsScreenState
         (value) {
           setState(() => _obstacleDetected = value);
           _updateSetting('obstacleDetected', value);
+          _speak('Obstacle Detected alerts ${value ? 'enabled' : 'disabled'}', forceSpeak: true);
         },
         theme,
       ),
@@ -310,7 +304,7 @@ class _NotificationTheme {
 }
 
 final _lightTheme = _NotificationTheme(
-  backgroundColor: const Color(0xFFE3F2FD),
+  backgroundColor: const Color.fromARGB(255, 255, 255, 255),
   textColor: Colors.black87,
   subtitleColor: Colors.grey.shade600,
   toggleOnColor: const Color(0xFF173C61),

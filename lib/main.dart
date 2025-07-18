@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tanaw_app/screens/splash_screen.dart';
 import 'package:tanaw_app/state/guardian_mode_state.dart';
-import 'screens/splash_screen.dart';
+import 'package:tanaw_app/state/tts_state.dart';
+import 'package:tanaw_app/state/profile_state.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => GuardianModeState(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => GuardianModeState()),
+        ChangeNotifierProvider(create: (_) => TtsState()),
+        ChangeNotifierProvider(create: (_) => ProfileState()),
+      ],
       child: const MyApp(),
     ),
   );

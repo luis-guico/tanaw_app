@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tanaw_app/state/guardian_mode_state.dart';
 
 class AnimatedBottomNavBar extends StatelessWidget {
   final int selectedIndex;
@@ -12,9 +14,14 @@ class AnimatedBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isGuardianMode =
+        Provider.of<GuardianModeState>(context).isGuardianModeEnabled;
+    final Color backgroundColor =
+        isGuardianMode ? const Color(0xFF14375F) : Colors.white;
+
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: backgroundColor,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withAlpha(25),
@@ -34,18 +41,21 @@ class AnimatedBottomNavBar extends StatelessWidget {
                 label: 'Status',
                 isSelected: selectedIndex == 0,
                 onTap: () => onItemTapped(0),
+                isGuardianMode: isGuardianMode,
               ),
               _NavItem(
                 icon: Icons.home,
                 label: 'Home',
                 isSelected: selectedIndex == 1,
                 onTap: () => onItemTapped(1),
+                isGuardianMode: isGuardianMode,
               ),
               _NavItem(
                 icon: Icons.person,
                 label: 'Profile',
                 isSelected: selectedIndex == 2,
                 onTap: () => onItemTapped(2),
+                isGuardianMode: isGuardianMode,
               ),
             ],
           ),
@@ -60,12 +70,14 @@ class _NavItem extends StatefulWidget {
   final String label;
   final bool isSelected;
   final VoidCallback onTap;
+  final bool isGuardianMode;
 
   const _NavItem({
     required this.icon,
     required this.label,
     required this.isSelected,
     required this.onTap,
+    required this.isGuardianMode,
   });
 
   @override
@@ -115,8 +127,12 @@ class __NavItemState extends State<_NavItem>
 
   @override
   Widget build(BuildContext context) {
-    final color =
-        widget.isSelected ? const Color(0xFF153A5B) : Colors.grey[400];
+    final Color selectedColor =
+        widget.isGuardianMode ? Colors.white : const Color(0xFF153A5B);
+    final Color unselectedColor =
+        widget.isGuardianMode ? Colors.white.withAlpha(178) : Colors.grey[400]!;
+
+    final color = widget.isSelected ? selectedColor : unselectedColor;
 
     return GestureDetector(
       onTap: widget.onTap,
@@ -125,7 +141,7 @@ class __NavItemState extends State<_NavItem>
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: widget.isSelected
-              ? const Color(0xFF153A5B).withAlpha(25)
+              ? selectedColor.withAlpha(25)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(20),
         ),
