@@ -5,10 +5,10 @@ class AnimatedBottomNavBar extends StatelessWidget {
   final Function(int) onItemTapped;
 
   const AnimatedBottomNavBar({
-    Key? key,
+    super.key,
     required this.selectedIndex,
     required this.onItemTapped,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class AnimatedBottomNavBar extends StatelessWidget {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withAlpha(25),
             blurRadius: 10,
             offset: const Offset(0, -2),
           ),
@@ -62,12 +62,11 @@ class _NavItem extends StatefulWidget {
   final VoidCallback onTap;
 
   const _NavItem({
-    Key? key,
     required this.icon,
     required this.label,
     required this.isSelected,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   __NavItemState createState() => __NavItemState();
@@ -126,7 +125,7 @@ class __NavItemState extends State<_NavItem>
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: widget.isSelected
-              ? const Color(0xFF153A5B).withOpacity(0.1)
+              ? const Color(0xFF153A5B).withAlpha(25)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(20),
         ),

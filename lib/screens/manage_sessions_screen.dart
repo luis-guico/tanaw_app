@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class ManageSessionsScreen extends StatefulWidget {
-  const ManageSessionsScreen({Key? key}) : super(key: key);
+  const ManageSessionsScreen({super.key});
 
   @override
-  _ManageSessionsScreenState createState() => _ManageSessionsScreenState();
+  ManageSessionsScreenState createState() => ManageSessionsScreenState();
 }
 
-class _ManageSessionsScreenState extends State<ManageSessionsScreen> {
+class ManageSessionsScreenState extends State<ManageSessionsScreen> {
   final List<Map<String, String>> _sessions = [
     {
       'device': 'Pixel 6 Pro',

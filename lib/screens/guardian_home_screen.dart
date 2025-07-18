@@ -6,13 +6,13 @@ import 'package:tanaw_app/widgets/animated_bottom_nav_bar.dart';
 import 'package:tanaw_app/widgets/fade_page_route.dart';
 
 class GuardianHomeScreen extends StatefulWidget {
-  const GuardianHomeScreen({Key? key}) : super(key: key);
+  const GuardianHomeScreen({super.key});
 
   @override
-  _GuardianHomeScreenState createState() => _GuardianHomeScreenState();
+  GuardianHomeScreenState createState() => GuardianHomeScreenState();
 }
 
-class _GuardianHomeScreenState extends State<GuardianHomeScreen>
+class GuardianHomeScreenState extends State<GuardianHomeScreen>
     with TickerProviderStateMixin {
   late AnimationController _animationController;
   final FlutterTts _flutterTts = FlutterTts();
@@ -180,7 +180,7 @@ class _GuardianHomeScreenState extends State<GuardianHomeScreen>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.15),
+        color: Colors.white.withAlpha(38),
         borderRadius: BorderRadius.circular(15),
       ),
       child: const Row(
@@ -219,7 +219,7 @@ class _GuardianHomeScreenState extends State<GuardianHomeScreen>
           Chip(
             avatar: const Icon(Icons.check_circle, color: Colors.white, size: 20),
             label: const Text('Connected'),
-            backgroundColor: Colors.green.withOpacity(0.8),
+            backgroundColor: Colors.green.withAlpha(204),
             labelStyle: const TextStyle(
                 color: Colors.white, fontWeight: FontWeight.bold),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -240,12 +240,12 @@ class _GuardianHomeScreenState extends State<GuardianHomeScreen>
           elevation: 2,
           margin: const EdgeInsets.symmetric(vertical: 6),
           color: isEven
-              ? Colors.lightBlue.shade50.withOpacity(0.9)
-              : Colors.white.withOpacity(0.95),
+              ? Colors.lightBlue.shade50.withAlpha(230)
+              : Colors.white.withAlpha(242),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: ExpansionTile(
-            leading: Icon(record['icon'], color: Color(0xFF163C63), size: 32),
+            leading: Icon(record['icon'], color: const Color(0xFF163C63), size: 32),
             title: Text(
               'Encountered: ${record['type']}',
               style: const TextStyle(
@@ -316,12 +316,11 @@ class _DashboardItem extends StatelessWidget {
   final String tooltip;
 
   const _DashboardItem({
-    Key? key,
     required this.icon,
     required this.title,
     required this.value,
     required this.tooltip,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

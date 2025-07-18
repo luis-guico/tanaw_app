@@ -5,41 +5,46 @@ import 'package:tanaw_app/screens/profile_screen.dart';
 import 'package:tanaw_app/state/guardian_mode_state.dart';
 import 'package:tanaw_app/widgets/animated_bottom_nav_bar.dart';
 import 'package:tanaw_app/widgets/fade_page_route.dart';
+import 'package:tanaw_app/screens/guardian_home_screen.dart';
 
 class StatusScreen extends StatefulWidget {
-  const StatusScreen({Key? key}) : super(key: key);
+  const StatusScreen({super.key});
 
   @override
-  _StatusScreenState createState() => _StatusScreenState();
+  StatusScreenState createState() => StatusScreenState();
 }
 
-class _StatusScreenState extends State<StatusScreen> {
+class StatusScreenState extends State<StatusScreen> {
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
     if (index == _selectedIndex) return;
 
+    final isGuardianMode =
+        Provider.of<GuardianModeState>(context, listen: false)
+            .isGuardianModeEnabled;
+
     setState(() {
       _selectedIndex = index;
     });
 
+    Widget page;
     switch (index) {
       case 0:
-        // Already on Status Screen
+        page = const StatusScreen();
         break;
       case 1:
-        Navigator.pushReplacement(
-          context,
-          FadePageRoute(page: const HomeScreen()),
-        );
+        page = isGuardianMode
+            ? const GuardianHomeScreen()
+            : const HomeScreen();
         break;
       case 2:
-        Navigator.pushReplacement(
-          context,
-          FadePageRoute(page: const ProfileScreen()),
-        );
+        page = const ProfileScreen();
         break;
+      default:
+        return;
     }
+    Navigator.pushReplacement(context, FadePageRoute(page: page));
   }
 
   @override

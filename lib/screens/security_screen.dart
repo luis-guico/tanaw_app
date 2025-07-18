@@ -5,7 +5,7 @@ import 'package:tanaw_app/screens/manage_sessions_screen.dart';
 import 'package:tanaw_app/screens/two_factor_auth_screen.dart';
 
 class SecurityScreen extends StatelessWidget {
-  const SecurityScreen({Key? key}) : super(key: key);
+  const SecurityScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

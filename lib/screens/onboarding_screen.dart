@@ -5,13 +5,13 @@ import 'package:tanaw_app/screens/login_screen.dart';
 import 'package:tanaw_app/screens/signup_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
-  const OnboardingScreen({Key? key}) : super(key: key);
+  const OnboardingScreen({super.key});
 
   @override
-  _OnboardingScreenState createState() => _OnboardingScreenState();
+  OnboardingScreenState createState() => OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> {
+class OnboardingScreenState extends State<OnboardingScreen> {
   final _pageController = PageController();
   Timer? _timer;
   int _currentPage = 0;
@@ -198,11 +198,10 @@ class _OnboardingPage extends StatelessWidget {
   final String description;
 
   const _OnboardingPage({
-    Key? key,
     required this.icon,
     required this.title,
     required this.description,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

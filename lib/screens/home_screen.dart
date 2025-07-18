@@ -5,20 +5,19 @@ import 'package:tanaw_app/screens/profile_screen.dart';
 import 'package:tanaw_app/screens/status_screen.dart';
 import 'package:tanaw_app/widgets/animated_bottom_nav_bar.dart';
 import 'package:tanaw_app/widgets/fade_page_route.dart';
-import 'package:vibration/vibration.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  HomeScreenState createState() => HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class HomeScreenState extends State<HomeScreen> {
   final FlutterTts _flutterTts = FlutterTts();
-  String _lastDetectedObject = "Garbage Bin";
-  String _deviceStatus = "Connected";
-  String _batteryLevel = "80%";
+  final String _lastDetectedObject = "Garbage Bin";
+  final String _deviceStatus = "Connected";
+  final String _batteryLevel = "80%";
   int _selectedIndex = 1;
 
   void _onItemTapped(int index) {

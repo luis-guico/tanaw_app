@@ -1,12 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:tanaw_app/screens/guardian_home_screen.dart';
 import 'package:tanaw_app/screens/home_screen.dart';
-import 'package:tanaw_app/screens/security_screen.dart';
 import 'package:tanaw_app/state/guardian_mode_state.dart';
 import 'package:tanaw_app/widgets/animated_bottom_nav_bar.dart';
 import 'login_screen.dart';
@@ -16,15 +14,16 @@ import 'language_settings_screen.dart';
 import 'guardian_guide_screen.dart';
 import 'terms_privacy_screen.dart';
 import 'package:tanaw_app/widgets/fade_page_route.dart';
+import 'package:tanaw_app/screens/status_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
 
   @override
-  _ProfileScreenState createState() => _ProfileScreenState();
+  ProfileScreenState createState() => ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class ProfileScreenState extends State<ProfileScreen> {
   int _selectedIndex = 2;
   File? _imageFile;
 
@@ -44,28 +43,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
         Provider.of<GuardianModeState>(context, listen: false)
             .isGuardianModeEnabled;
 
-    Widget destination;
-    if (index == 1) {
-      destination =
-          isGuardianMode ? const GuardianHomeScreen() : const HomeScreen();
-    } else if (index == 2) {
-      destination = const ProfileScreen();
-    } else {
-      // Placeholder for 'Status' screen if it exists
-      return;
-    }
+    setState(() {
+      _selectedIndex = index;
+    });
 
-    Navigator.pushReplacement(
-      context,
-      FadePageRoute(page: destination),
-    );
+    Widget page;
+    switch (index) {
+      case 0:
+        page = const StatusScreen();
+        break;
+      case 1:
+        page = isGuardianMode
+            ? const GuardianHomeScreen()
+            : const HomeScreen();
+        break;
+      case 2:
+        page = const ProfileScreen();
+        break;
+      default:
+        return;
+    }
+    Navigator.pushReplacement(context, FadePageRoute(page: page));
   }
 
-  void _showConfirmationDialog(bool isEnabling, bool isCurrentlyDark) {
+  void _showConfirmationDialog(bool isEnabling, bool isCurrentlyGuardian) {
+    final bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final dialogBackgroundColor =
-        isCurrentlyDark ? const Color(0xFF163C63) : Colors.white;
-    final titleTextColor = isCurrentlyDark ? Colors.white : Colors.black87;
-    final contentTextColor = isCurrentlyDark ? Colors.white70 : Colors.black54;
+        isDarkMode ? const Color(0xFF163C63) : Colors.white;
+    final titleTextColor = isDarkMode ? Colors.white : Colors.black87;
+    final contentTextColor = isDarkMode ? Colors.white70 : Colors.black54;
 
     showDialog(
       context: context,
@@ -101,14 +107,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const EdgeInsets.only(bottom: 20, left: 20, right: 20),
           actions: <Widget>[
             OutlinedButton(
-              child: const Text('Cancel'),
               onPressed: () => Navigator.of(context).pop(),
               style: OutlinedButton.styleFrom(
                 foregroundColor: contentTextColor,
-                side: BorderSide(color: contentTextColor.withOpacity(0.5)),
+                side: BorderSide(color: contentTextColor.withAlpha(128)),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
               ),
+              child: const Text('Cancel'),
             ),
             const SizedBox(width: 12),
             ElevatedButton.icon(
@@ -131,19 +137,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       : "Guardian Mode Deactivated",
                   toastLength: Toast.LENGTH_SHORT,
                   gravity: ToastGravity.BOTTOM,
-                  backgroundColor: Colors.black87,
+                  backgroundColor: isEnabling ? const Color(0xFF153A5B) : Colors.black87,
                   textColor: Colors.white,
                 );
 
-                if (isEnabling) {
+                /* if (isEnabling) {
                   Navigator.pushReplacement(
                     context,
                     FadePageRoute(page: const GuardianHomeScreen()),
                   );
-                }
+                } */
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: isEnabling ? Colors.green : Colors.redAccent,
+                backgroundColor: isEnabling ? const Color(0xFF153A5B) : Colors.redAccent,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
@@ -162,7 +168,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final isGuardianMode = guardianModeState.isGuardianModeEnabled;
 
     return Scaffold(
-      backgroundColor: isGuardianMode ? const Color(0xFF163C63) : Colors.grey[100],
+      backgroundColor: isGuardianMode ? const Color(0xFF102A43) : Colors.grey[100],
       appBar: _buildAppBar(context, isGuardianMode),
       body: isGuardianMode ? _buildGuardianProfile(context) : _buildUserProfile(context),
       bottomNavigationBar: AnimatedBottomNavBar(
@@ -173,8 +179,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context, bool isGuardianMode) {
-    final Color appBarColor = isGuardianMode ? const Color(0xFF163C63) : Colors.white;
-    final Color titleColor = isGuardianMode ? Colors.white : const Color(0xFF163C63);
+    final Color appBarColor = isGuardianMode ? const Color(0xFF102A43) : Colors.white;
+    final Color titleColor = isGuardianMode ? Colors.white : const Color(0xFF153A5B);
 
     return AppBar(
       elevation: 0,
@@ -463,34 +469,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       title: Text(title, style: TextStyle(color: tileColor)),
       trailing: Icon(Icons.arrow_forward_ios, size: 16, color: tileColor),
       onTap: onTap,
-    );
-  }
-
-  Widget _buildProfileOption({
-    required BuildContext context,
-    required IconData icon,
-    required String title,
-    required VoidCallback onTap,
-  }) {
-    final guardianModeState = Provider.of<GuardianModeState>(context);
-    final isGuardianMode = guardianModeState.isGuardianModeEnabled;
-    final textColor = isGuardianMode ? Colors.white : const Color(0xFF163C63);
-
-    return ListTile(
-      leading: Icon(icon, color: textColor, size: 28),
-      title: Text(
-        title,
-        style: TextStyle(
-          color: textColor,
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-      trailing: Icon(Icons.arrow_forward_ios, color: textColor, size: 16),
-      onTap: () {
-        HapticFeedback.lightImpact();
-        onTap();
-      },
     );
   }
 }
