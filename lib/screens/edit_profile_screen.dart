@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -9,14 +10,15 @@ class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
 
   @override
-  _EditProfileScreenState createState() => _EditProfileScreenState();
+  EditProfileScreenState createState() => EditProfileScreenState();
 }
 
-class _EditProfileScreenState extends State<EditProfileScreen> {
+class EditProfileScreenState extends State<EditProfileScreen> {
   late TextEditingController _nameController;
   late TextEditingController _emailController;
   late TextEditingController _phoneController;
-  File? _imageFile;
+  String? _userImagePath;
+  String? _guardianImagePath;
 
   @override
   void initState() {
@@ -36,6 +38,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       text:
           isGuardianMode ? profileState.guardianPhone : profileState.userPhone,
     );
+    if (isGuardianMode) {
+      _guardianImagePath = profileState.guardianImagePath;
+    } else {
+      _userImagePath = profileState.userImagePath;
+    }
   }
 
   @override
@@ -51,7 +58,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
-        _imageFile = File(pickedFile.path);
+        if (Provider.of<GuardianModeState>(context, listen: false)
+            .isGuardianModeEnabled) {
+          _guardianImagePath = pickedFile.path;
+        } else {
+          _userImagePath = pickedFile.path;
+        }
       });
     }
   }
@@ -66,15 +78,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       profileState.updateGuardianName(_nameController.text);
       profileState.updateGuardianEmail(_emailController.text);
       profileState.updateGuardianPhone(_phoneController.text);
-      if (_imageFile != null) {
-        profileState.updateGuardianImage(_imageFile!);
+      if (_guardianImagePath != null) {
+        profileState.updateGuardianImage(_guardianImagePath!);
       }
     } else {
       profileState.updateUserName(_nameController.text);
       profileState.updateUserEmail(_emailController.text);
       profileState.updateUserPhone(_phoneController.text);
-      if (_imageFile != null) {
-        profileState.updateUserImage(_imageFile!);
+      if (_userImagePath != null) {
+        profileState.updateUserImage(_userImagePath!);
       }
     }
 
@@ -98,8 +110,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     final Color accentColor =
         isGuardianMode ? Colors.greenAccent : Colors.green;
 
-    final currentImage =
-        isGuardianMode ? profileState.guardianImage : profileState.userImage;
+    
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -131,12 +142,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   children: [
                     CircleAvatar(
                       radius: 60,
-                      backgroundImage: _imageFile != null
-                          ? FileImage(_imageFile!)
-                          : (currentImage != null
-                              ? FileImage(currentImage)
-                              : const AssetImage('assets/TANAW-LOGO2.0.png'))
-                              as ImageProvider,
+                      backgroundImage: isGuardianMode
+                          ? (_guardianImagePath != null
+                              ? FileImage(File(_guardianImagePath!))
+                              : (profileState.guardianImagePath != null
+                                  ? FileImage(File(profileState.guardianImagePath!))
+                                  : const AssetImage('assets/TANAW-LOGO2.0.png'))
+                                  as ImageProvider)
+                          : (_userImagePath != null
+                              ? FileImage(File(_userImagePath!))
+                              : (profileState.userImagePath != null
+                                  ? FileImage(File(profileState.userImagePath!))
+                                  : const AssetImage('assets/TANAW-LOGO2.0.png'))
+                                  as ImageProvider),
                     ),
                     Positioned(
                       bottom: 0,
@@ -146,7 +164,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         backgroundColor: fieldBackgroundColor,
                         child: Icon(
                           Icons.camera_alt,
-                          color: textColor.withOpacity(0.7),
+                          color: textColor.withAlpha(179),
                         ),
                       ),
                     ),
@@ -189,7 +207,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         Text(
           label,
           style: TextStyle(
-            color: textColor.withOpacity(0.8),
+            color: textColor.withAlpha(204),
             fontWeight: FontWeight.w600,
           ),
         ),

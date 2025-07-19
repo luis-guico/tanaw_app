@@ -1,7 +1,8 @@
-import 'dart:io';
+import 'dart:io' if (dart.library.html) 'dart:html';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image_picker/image_picker.dart';
+
+
 import 'package:provider/provider.dart';
 import 'package:tanaw_app/screens/guardian_home_screen.dart';
 import 'package:tanaw_app/screens/home_screen.dart';
@@ -206,7 +207,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
+                        color: Colors.black12,
                         blurRadius: 10,
                       )
                     ],
@@ -274,8 +275,8 @@ class ProfileScreenState extends State<ProfileScreen> {
           _buildProfileHeader(
             profileState.userName,
             "Visually Impaired User",
-            profileState.userImage != null
-                ? FileImage(profileState.userImage!)
+            profileState.userImagePath != null && !kIsWeb
+                ? FileImage(File(profileState.userImagePath!))
                 : const AssetImage('assets/TANAW-LOGO2.0.png'),
             isGuardianMode,
           ),
@@ -320,8 +321,8 @@ class ProfileScreenState extends State<ProfileScreen> {
           _buildProfileHeader(
             profileState.guardianName,
             "Guardian",
-            profileState.guardianImage != null
-                ? FileImage(profileState.guardianImage!)
+            profileState.guardianImagePath != null && !kIsWeb
+                ? FileImage(File(profileState.guardianImagePath!))
                 : const AssetImage('assets/TANAW-LOGO2.0.png'),
             isGuardianMode,
           ),
@@ -417,7 +418,7 @@ class ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildProfileHeader(
       String name, String role, ImageProvider imageProvider, bool isGuardianMode) {
-    final textColor = isGuardianMode ? Colors.white : Colors.black87;
+    
     return Row(
       children: [
         CircleAvatar(

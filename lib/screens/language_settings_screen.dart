@@ -126,16 +126,16 @@ class LanguageSettingsScreenState extends State<LanguageSettingsScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
       decoration: BoxDecoration(
         color: isGuardianMode
-            ? Colors.white.withOpacity(0.1)
+            ? Colors.white.withAlpha(26)
             : Colors.grey.shade50,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color:
-              isGuardianMode ? Colors.white.withOpacity(0.2) : Colors.grey.shade300,
+              isGuardianMode ? Colors.white.withAlpha(51) : Colors.grey.shade300,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black12,
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),

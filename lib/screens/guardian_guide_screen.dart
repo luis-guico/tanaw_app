@@ -170,7 +170,7 @@ class GuardianGuideScreenState extends State<GuardianGuideScreen> {
                     Text(
                       item.answer,
                       style: TextStyle(
-                          color: textColor.withOpacity(0.8),
+                          color: textColor.withAlpha(204),
                           fontSize: 14,
                           height: 1.5),
                     ),
@@ -181,7 +181,7 @@ class GuardianGuideScreenState extends State<GuardianGuideScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text('Was this helpful?',
-                            style: TextStyle(color: textColor.withOpacity(0.8))),
+                            style: TextStyle(color: textColor.withAlpha(204))),
                         const SizedBox(width: 16),
                         OutlinedButton(
                           onPressed: () => setState(() => _helpfulIndex = index),
