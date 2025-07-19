@@ -6,7 +6,6 @@ import 'package:tanaw_app/state/guardian_mode_state.dart';
 import 'package:tanaw_app/widgets/animated_bottom_nav_bar.dart';
 import 'package:tanaw_app/widgets/fade_page_route.dart';
 import 'package:tanaw_app/screens/guardian_home_screen.dart';
-import 'package:tanaw_app/widgets/tanaw_logo.dart';
 
 class StatusScreen extends StatefulWidget {
   const StatusScreen({super.key});
@@ -54,18 +53,39 @@ class StatusScreenState extends State<StatusScreen> {
         Provider.of<GuardianModeState>(context).isGuardianModeEnabled;
 
     final cardColor =
-        isGuardianMode ? const Color(0xFF0F3356) : Colors.white;
+        isGuardianMode ? const Color(0xFF163C63) : Colors.white;
     final cardTitleColor = isGuardianMode ? Colors.white : Colors.black87;
-    final cardContentColor = isGuardianMode ? Colors.white : Colors.black54;
+    final cardContentColor =
+        isGuardianMode ? Colors.white : Colors.black54;
 
     return Scaffold(
       backgroundColor:
-          isGuardianMode ? const Color(0xFF102A43) : Colors.white,
+          isGuardianMode ? const Color(0xFF102A43) : Colors.grey[100],
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: isGuardianMode ? Colors.transparent : Colors.white,
-        elevation: 0,
-        title: TanawLogo(isGuardianMode: isGuardianMode),
+        backgroundColor:
+            isGuardianMode ? Colors.transparent : Colors.white,
+        elevation: isGuardianMode ? 0 : 2,
+        title: Padding(
+          padding: const EdgeInsets.only(top: 10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset('assets/logo.png', width: 35),
+              const SizedBox(height: 4),
+              Text(
+                'TANAW',
+                style: TextStyle(
+                  color: isGuardianMode ? Colors.white : Colors.black87,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 2,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
       body: ListView(
         padding: const EdgeInsets.all(20.0),

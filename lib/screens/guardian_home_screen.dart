@@ -4,7 +4,6 @@ import 'package:tanaw_app/screens/profile_screen.dart';
 import 'package:tanaw_app/screens/status_screen.dart';
 import 'package:tanaw_app/widgets/animated_bottom_nav_bar.dart';
 import 'package:tanaw_app/widgets/fade_page_route.dart';
-import 'package:tanaw_app/widgets/tanaw_logo.dart';
 
 class GuardianHomeScreen extends StatefulWidget {
   const GuardianHomeScreen({super.key});
@@ -105,7 +104,26 @@ class GuardianHomeScreenState extends State<GuardianHomeScreen>
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const TanawLogo(isGuardianMode: true),
+        title: Padding(
+          padding: const EdgeInsets.only(top: 10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset('assets/logo.png', width: 35),
+              const SizedBox(height: 4),
+              const Text(
+                'TANAW',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 2,
+                ),
+              ),
+            ],
+          ),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.volume_up_outlined, color: Colors.white),
@@ -162,7 +180,7 @@ class GuardianHomeScreenState extends State<GuardianHomeScreen>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF0F3356),
+        color: const Color(0xFF163C63),
         borderRadius: BorderRadius.circular(15),
       ),
       child: const Row(
@@ -201,7 +219,7 @@ class GuardianHomeScreenState extends State<GuardianHomeScreen>
           Chip(
             avatar: const Icon(Icons.check_circle, color: Colors.white, size: 20),
             label: const Text('Connected'),
-            backgroundColor: const Color(0xFF0F3356),
+            backgroundColor: const Color(0xFF163C63),
             labelStyle: const TextStyle(
                 color: Colors.white, fontWeight: FontWeight.bold),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -220,7 +238,7 @@ class GuardianHomeScreenState extends State<GuardianHomeScreen>
         return Card(
           elevation: 2,
           margin: const EdgeInsets.symmetric(vertical: 6),
-          color: const Color(0xFF0F3356),
+          color: const Color(0xFF163C63),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: ExpansionTile(

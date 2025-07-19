@@ -8,7 +8,6 @@ import 'package:tanaw_app/screens/home_screen.dart';
 import 'package:tanaw_app/state/guardian_mode_state.dart';
 import 'package:tanaw_app/state/tts_state.dart';
 import 'package:tanaw_app/widgets/animated_bottom_nav_bar.dart';
-import 'package:tanaw_app/widgets/tanaw_logo.dart';
 import 'login_screen.dart';
 import 'change_password_screen.dart';
 import 'notification_settings_screen.dart';
@@ -36,11 +35,9 @@ class ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     _ttsService = TtsService(context);
+    // Announce the screen title when the screen is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final isGuardianMode =
-          Provider.of<GuardianModeState>(context, listen: false)
-              .isGuardianModeEnabled;
-      _ttsService.speak(isGuardianMode ? 'Guardian Profile' : 'User Profile');
+      _ttsService.speak('Profile Screen');
     });
   }
 
@@ -61,7 +58,9 @@ class ProfileScreenState extends State<ProfileScreen> {
         page = const StatusScreen();
         break;
       case 1:
-        page = isGuardianMode ? const GuardianHomeScreen() : const HomeScreen();
+        page = isGuardianMode
+            ? const GuardianHomeScreen()
+            : const HomeScreen();
         break;
       case 2:
         page = const ProfileScreen();
@@ -85,7 +84,7 @@ class ProfileScreenState extends State<ProfileScreen> {
 
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: false, // Prevent accidental dismissal
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: dialogBackgroundColor,
@@ -139,7 +138,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                     Provider.of<GuardianModeState>(context, listen: false);
                 guardianModeState.setGuardianMode(isEnabling);
 
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // Close the dialog
 
                 _ttsService.speak(isEnabling
                     ? "Guardian Mode Activated"
@@ -151,14 +150,19 @@ class ProfileScreenState extends State<ProfileScreen> {
                       : "Guardian Mode Deactivated",
                   toastLength: Toast.LENGTH_SHORT,
                   gravity: ToastGravity.BOTTOM,
-                  backgroundColor:
-                      isEnabling ? const Color(0xFF153A5B) : Colors.black87,
+                  backgroundColor: isEnabling ? const Color(0xFF153A5B) : Colors.black87,
                   textColor: Colors.white,
                 );
+
+                /* if (isEnabling) {
+                  Navigator.pushReplacement(
+                    context,
+                    FadePageRoute(page: const GuardianHomeScreen()),
+                  );
+                } */
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    isEnabling ? const Color(0xFF153A5B) : Colors.redAccent,
+                backgroundColor: isEnabling ? const Color(0xFF153A5B) : Colors.redAccent,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
@@ -177,12 +181,9 @@ class ProfileScreenState extends State<ProfileScreen> {
     final isGuardianMode = guardianModeState.isGuardianModeEnabled;
 
     return Scaffold(
-      backgroundColor:
-          isGuardianMode ? const Color(0xFF102A43) : Colors.grey.shade100,
+      backgroundColor: isGuardianMode ? const Color(0xFF102A43) : Colors.grey[100],
       appBar: _buildAppBar(context, isGuardianMode),
-      body: isGuardianMode
-          ? _buildGuardianProfile(context)
-          : _buildUserProfile(context),
+      body: isGuardianMode ? _buildGuardianProfile(context) : _buildUserProfile(context),
       bottomNavigationBar: AnimatedBottomNavBar(
         selectedIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
@@ -191,34 +192,32 @@ class ProfileScreenState extends State<ProfileScreen> {
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context, bool isGuardianMode) {
-    if (isGuardianMode) {
-      return AppBar(
-        elevation: 0,
-        backgroundColor: const Color(0xFF102A43),
-        automaticallyImplyLeading: false,
-        title: TanawLogo(isGuardianMode: isGuardianMode),
-        actions: const [],
-      );
-    }
+    final Color appBarColor = isGuardianMode ? const Color(0xFF102A43) : Colors.white;
+    final Color titleColor = isGuardianMode ? Colors.white : Colors.black;
+
     return AppBar(
       elevation: 0,
-      backgroundColor: Colors.transparent,
+      backgroundColor: appBarColor,
       automaticallyImplyLeading: false,
-      title: const Text(
+      title: Text(
         'Profile',
         style: TextStyle(
-            color: Colors.black, fontWeight: FontWeight.bold, fontSize: 24),
+          color: titleColor,
+          fontWeight: FontWeight.bold,
+          fontSize: 22,
+        ),
       ),
+      actions: [],
     );
   }
 
   Widget _buildUserProfile(BuildContext context) {
-    final profileState = Provider.of<ProfileState>(context);
-    final ttsState = Provider.of<TtsState>(context);
     final guardianModeState = Provider.of<GuardianModeState>(context);
+    final isGuardianMode = guardianModeState.isGuardianModeEnabled;
+    final profileState = Provider.of<ProfileState>(context);
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -227,8 +226,8 @@ class ProfileScreenState extends State<ProfileScreen> {
             "Visually Impaired User",
             profileState.userImage != null
                 ? FileImage(profileState.userImage!)
-                : const AssetImage('assets/logo.png') as ImageProvider,
-            false,
+                : const AssetImage('assets/logo.png'),
+            isGuardianMode,
           ),
           const SizedBox(height: 24),
           _buildInfoCard(
@@ -240,21 +239,19 @@ class ProfileScreenState extends State<ProfileScreen> {
               _buildInfoRow(Icons.phone_android, 'Device Connected', 'Yes'),
               _buildInfoRow(Icons.toggle_on, 'Current Mode', 'User'),
             ],
-            false,
+            isGuardianMode,
           ),
           const SizedBox(height: 16),
           _buildInfoCard(
             context,
             'Preferences',
             [
-              _buildSettingsActionRow(
-                  context, Icons.language, 'Language', () {},
-                  isGuardianMode: false)
+              _buildInfoRow(Icons.language, 'Language', 'English'),
             ],
-            false,
+            isGuardianMode,
           ),
-          const SizedBox(height: 16),
-          _buildTogglesCard(context, guardianModeState, ttsState),
+          const SizedBox(height: 24),
+          _buildSettingsSection(context, isGuardianMode, guardianModeState),
         ],
       ),
     );
@@ -266,7 +263,7 @@ class ProfileScreenState extends State<ProfileScreen> {
     final profileState = Provider.of<ProfileState>(context);
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -275,7 +272,7 @@ class ProfileScreenState extends State<ProfileScreen> {
             "Guardian",
             profileState.guardianImage != null
                 ? FileImage(profileState.guardianImage!)
-                : const AssetImage('assets/logo.png') as ImageProvider,
+                : const AssetImage('assets/logo.png'),
             isGuardianMode,
           ),
           const SizedBox(height: 24),
@@ -308,189 +305,69 @@ class ProfileScreenState extends State<ProfileScreen> {
             ],
             isGuardianMode,
           ),
-          const SizedBox(height: 24),
-          _buildGuardianSettings(context),
+          const SizedBox(height: 16),
+          _buildInfoCard(
+            context,
+            'Settings & More',
+            [
+              ListTile(
+                leading: const Icon(Icons.shield_outlined, color: Colors.white),
+                title: const Text('Guardian Mode', style: TextStyle(color: Colors.white)),
+                trailing: Switch(
+                  value: isGuardianMode,
+                  onChanged: (value) => _showConfirmationDialog(value, isGuardianMode),
+                  activeColor: Colors.white,
+                  activeTrackColor: Colors.lightBlueAccent,
+                ),
+              ),
+              _buildSettingsTile(Icons.notifications_outlined, 'Notification Settings', () {
+                Navigator.push(
+                  context,
+                  FadePageRoute(page: const NotificationSettingsScreen()),
+                );
+              }, isGuardianMode: true),
+              _buildSettingsTile(Icons.language, 'Language', () {
+                Navigator.push(
+                  context,
+                  FadePageRoute(page: const LanguageSettingsScreen()),
+                );
+              }, isGuardianMode: true),
+              _buildSettingsTile(Icons.lock_outline, 'Change Password', () {
+                Navigator.push(
+                  context,
+                  FadePageRoute(page: const ChangePasswordScreen()),
+                );
+              }, isGuardianMode: true),
+              _buildSettingsTile(Icons.help_outline, 'Guardian Guide / Help', () {
+                Navigator.push(
+                  context,
+                  FadePageRoute(page: const GuardianGuideScreen()),
+                );
+              }, isGuardianMode: true),
+              _buildSettingsTile(Icons.privacy_tip_outlined, 'Terms & Privacy', () {
+                Navigator.push(
+                  context,
+                  FadePageRoute(page: const TermsPrivacyScreen()),
+                );
+              }, isGuardianMode: true),
+              _buildSettingsTile(Icons.logout, 'Logout', () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  FadePageRoute(page: const LoginScreen()),
+                  (route) => false,
+                );
+              }, isGuardianMode: true),
+            ],
+            isGuardianMode,
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildTogglesCard(
-      BuildContext context, GuardianModeState guardianModeState, TtsState ttsState) {
-    return Card(
-      color: Colors.white,
-      elevation: 2,
-      shadowColor: Colors.black.withAlpha(51),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
-        child: Column(
-          children: [
-            _buildSettingsRow(
-              context,
-              Icons.family_restroom,
-              'Guardian Mode',
-              Switch(
-                value: guardianModeState.isGuardianModeEnabled,
-                onChanged: (value) {
-                  _showConfirmationDialog(
-                      value, guardianModeState.isGuardianModeEnabled);
-                },
-              ),
-              isGuardianMode: false,
-            ),
-            const Divider(),
-            _buildSettingsRow(
-              context,
-              Icons.record_voice_over,
-              'Voice Feedback (TTS)',
-              Switch(
-                value: ttsState.isTtsEnabled,
-                onChanged: (value) {
-                  ttsState.setTtsEnabled(value);
-                },
-              ),
-              isGuardianMode: false,
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildGuardianSettings(BuildContext context) {
-    return Card(
-      color: const Color(0xFF0F3356),
-      elevation: 4,
-      shadowColor: Colors.black.withAlpha(51),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildSettingsActionRow(context, Icons.notifications_none,
-                'Notification Settings', () {},
-                isGuardianMode: true),
-            const Divider(color: Colors.white24),
-            _buildSettingsActionRow(
-                context, Icons.help_outline, 'Guardian Guide / Help', () {
-              Navigator.push(
-                context,
-                FadePageRoute(page: const GuardianGuideScreen()),
-              );
-            }, isGuardianMode: true),
-            const Divider(color: Colors.white24),
-            _buildSettingsActionRow(
-                context, Icons.privacy_tip_outlined, 'Terms & Privacy', () {},
-                isGuardianMode: true),
-            const Divider(color: Colors.white24),
-            _buildSettingsActionRow(
-                context, Icons.lock_outline, 'Change Password', () {},
-                isGuardianMode: true),
-            const Divider(color: Colors.white24),
-            _buildSettingsActionRow(context, Icons.logout, 'Logout', () {
-              Navigator.pushAndRemoveUntil(
-                context,
-                FadePageRoute(page: const LoginScreen()),
-                (route) => false,
-              );
-            }, isGuardianMode: true),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInfoCard(BuildContext context, String title,
-      List<Widget> children, bool isGuardianMode) {
-    final cardColor = isGuardianMode ? const Color(0xFF0F3356) : Colors.white;
-    final titleColor = isGuardianMode ? Colors.white : Colors.black;
-
-    return Card(
-      elevation: isGuardianMode ? 4 : 2,
-      shadowColor: Colors.black.withAlpha(51),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      color: cardColor,
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                  fontSize: 19,
-                  fontWeight: FontWeight.bold,
-                  color: titleColor),
-            ),
-            const Divider(height: 30, thickness: 0.5),
-            ...children
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSettingsRow(
-      BuildContext context, IconData icon, String title, Widget trailing,
-      {bool isGuardianMode = false}) {
-    final tileColor = isGuardianMode ? Colors.white : Colors.black;
-
-    return ListTile(
-      contentPadding: const EdgeInsets.symmetric(vertical: 4),
-      leading: Icon(icon, color: tileColor),
-      title: Text(
-        title,
-        style: TextStyle(color: tileColor, fontWeight: FontWeight.w500),
-      ),
-      trailing: trailing,
-    );
-  }
-
-  Widget _buildSettingsActionRow(
-      BuildContext context, IconData icon, String title, VoidCallback onTap,
-      {bool isGuardianMode = false}) {
-    final tileColor = isGuardianMode ? Colors.white : Colors.black;
-
-    return ListTile(
-      contentPadding: const EdgeInsets.symmetric(vertical: 4),
-      leading: Icon(icon, color: tileColor),
-      title: Text(
-        title,
-        style: TextStyle(color: tileColor, fontWeight: FontWeight.w500),
-      ),
-      trailing: Icon(Icons.arrow_forward_ios, color: tileColor, size: 16),
-      onTap: onTap,
-    );
-  }
-
-  Widget _buildInfoRow(IconData icon, String label, String value,
-      {bool isGuardianMode = false}) {
-    final labelColor = isGuardianMode ? Colors.white : Colors.black;
-    final valueColor = isGuardianMode ? Colors.white : Colors.black;
-    final iconColor = isGuardianMode ? Colors.white : Colors.grey[800];
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        children: [
-          Icon(icon, size: 20, color: iconColor),
-          const SizedBox(width: 16),
-          Text(label, style: TextStyle(fontSize: 16, color: labelColor)),
-          const Spacer(),
-          Text(value,
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: valueColor)),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildProfileHeader(String name, String role,
-      ImageProvider<Object> imageProvider, bool isGuardianMode) {
+  Widget _buildProfileHeader(
+      String name, String role, ImageProvider imageProvider, bool isGuardianMode) {
+    final textColor = isGuardianMode ? Colors.white : Colors.black87;
     return Row(
       children: [
         CircleAvatar(
@@ -535,6 +412,224 @@ class ProfileScreenState extends State<ProfileScreen> {
           },
         ),
       ],
+    );
+  }
+
+  Widget _buildInfoCard(BuildContext context, String title, List<Widget> children, bool isGuardianMode) {
+    final cardColor = isGuardianMode ? const Color(0xFF1E4872) : Colors.white;
+    final titleColor = isGuardianMode ? Colors.white : Colors.black;
+
+    return Card(
+      color: cardColor,
+      elevation: isGuardianMode ? 4 : 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: titleColor),
+            ),
+            const Divider(height: 20, thickness: 1),
+            ...children,
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInfoRow(IconData icon, String label, String value, {bool isGuardianMode = false}) {
+    final labelColor = isGuardianMode ? Colors.white : Colors.black;
+    final valueColor = isGuardianMode ? Colors.white : Colors.black;
+    final iconColor = isGuardianMode ? Colors.white : Colors.grey[800];
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        children: [
+          Icon(icon, size: 20, color: iconColor),
+          const SizedBox(width: 16),
+          Text(label, style: TextStyle(fontSize: 16, color: labelColor)),
+          const Spacer(),
+          Text(value,
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: valueColor)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSettingsSection(BuildContext context, bool isGuardianMode,
+      GuardianModeState guardianModeState) {
+    final ttsState = Provider.of<TtsState>(context);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+      decoration: BoxDecoration(
+        color: isGuardianMode ? const Color(0xFF1E4872) : Colors.white,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSettingsRow(
+            context,
+            Icons.family_restroom,
+            'Guardian Mode',
+            Switch(
+              value: isGuardianMode,
+              onChanged: (value) {
+                _showConfirmationDialog(value, isGuardianMode);
+              },
+              activeColor: Colors.white,
+              activeTrackColor: const Color(0xFF81C784),
+              inactiveThumbColor: Colors.white,
+              inactiveTrackColor: Colors.grey.shade400,
+            ),
+            isGuardianMode: isGuardianMode,
+          ),
+          const SizedBox(height: 12),
+          _buildSettingsRow(
+            context,
+            Icons.record_voice_over,
+            'Voice Feedback (TTS)',
+            Switch(
+              value: ttsState.isTtsEnabled,
+              onChanged: (value) {
+                ttsState.setTtsEnabled(value);
+              },
+              activeColor: Colors.white,
+              activeTrackColor: const Color(0xFF81C784),
+              inactiveThumbColor: Colors.white,
+              inactiveTrackColor: Colors.grey.shade400,
+            ),
+            isGuardianMode: isGuardianMode,
+          ),
+          const Divider(height: 40),
+          _buildSettingsActionRow(
+            context,
+            Icons.notifications_none,
+            'Notification Settings',
+            () {
+              Navigator.push(
+                context,
+                FadePageRoute(page: const NotificationSettingsScreen()),
+              );
+            },
+            isGuardianMode: isGuardianMode,
+          ),
+          _buildSettingsActionRow(
+            context,
+            Icons.language,
+            'Language',
+            () {
+              Navigator.push(
+                context,
+                FadePageRoute(page: const LanguageSettingsScreen()),
+              );
+            },
+            isGuardianMode: isGuardianMode,
+          ),
+          _buildSettingsActionRow(
+            context,
+            Icons.lock_outline,
+            'Change Password',
+            () {
+              Navigator.push(
+                context,
+                FadePageRoute(page: const ChangePasswordScreen()),
+              );
+            },
+            isGuardianMode: isGuardianMode,
+          ),
+          if (isGuardianMode)
+            _buildSettingsActionRow(
+              context,
+              Icons.help_outline,
+              'Guardian Guide / Help',
+              () {
+                Navigator.push(
+                  context,
+                  FadePageRoute(page: const GuardianGuideScreen()),
+                );
+              },
+              isGuardianMode: isGuardianMode,
+            ),
+          _buildSettingsActionRow(
+            context,
+            Icons.privacy_tip_outlined,
+            'Terms & Privacy',
+            () {
+              Navigator.push(
+                context,
+                FadePageRoute(page: const TermsPrivacyScreen()),
+              );
+            },
+            isGuardianMode: isGuardianMode,
+          ),
+          _buildSettingsActionRow(
+            context,
+            Icons.logout,
+            'Logout',
+            () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                FadePageRoute(page: const LoginScreen()),
+                (route) => false,
+              );
+            },
+            isGuardianMode: isGuardianMode,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSettingsTile(IconData icon, String title, VoidCallback onTap, {bool isGuardianMode = false}) {
+    final tileColor = isGuardianMode ? Colors.white : Colors.black87;
+    return ListTile(
+      leading: Icon(icon, color: tileColor),
+      title: Text(title, style: TextStyle(color: tileColor)),
+      trailing: Icon(Icons.arrow_forward_ios, size: 16, color: tileColor),
+      onTap: onTap,
+    );
+  }
+
+  Widget _buildSettingsRow(
+      BuildContext context, IconData icon, String title, Widget trailing,
+      {bool isGuardianMode = false}) {
+    final tileColor = isGuardianMode ? Colors.white : Colors.black;
+
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(vertical: 4),
+      leading: Icon(icon, color: tileColor.withAlpha(230)),
+      title: Text(
+        title,
+        style: TextStyle(color: tileColor, fontWeight: FontWeight.w500),
+      ),
+      trailing: trailing,
+    );
+  }
+
+  Widget _buildSettingsActionRow(
+      BuildContext context, IconData icon, String title, VoidCallback onTap,
+      {bool isGuardianMode = false}) {
+    final tileColor = isGuardianMode ? Colors.white : Colors.black;
+
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(vertical: 4),
+      leading: Icon(icon, color: tileColor.withAlpha(230)),
+      title: Text(
+        title,
+        style: TextStyle(color: tileColor, fontWeight: FontWeight.w500),
+      ),
+      trailing:
+          Icon(Icons.arrow_forward_ios, color: tileColor.withAlpha(178), size: 16),
+      onTap: onTap,
     );
   }
 }
