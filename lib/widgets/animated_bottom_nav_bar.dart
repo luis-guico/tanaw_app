@@ -16,48 +16,60 @@ class AnimatedBottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final isGuardianMode =
         Provider.of<GuardianModeState>(context).isGuardianModeEnabled;
-    final Color backgroundColor =
-        isGuardianMode ? const Color(0xFF14375F) : Colors.white;
+    final Color backgroundColor = isGuardianMode
+        ? const Color(0xFF103554)
+        : const Color(0xDEFFFFFF);
 
-    return Container(
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(25),
-            blurRadius: 10,
-            offset: const Offset(0, -2),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _NavItem(
-                icon: Icons.show_chart,
-                label: 'Status',
-                isSelected: selectedIndex == 0,
-                onTap: () => onItemTapped(0),
-                isGuardianMode: isGuardianMode,
-              ),
-              _NavItem(
-                icon: Icons.home,
-                label: 'Home',
-                isSelected: selectedIndex == 1,
-                onTap: () => onItemTapped(1),
-                isGuardianMode: isGuardianMode,
-              ),
-              _NavItem(
-                icon: Icons.person,
-                label: 'Profile',
-                isSelected: selectedIndex == 2,
-                onTap: () => onItemTapped(2),
-                isGuardianMode: isGuardianMode,
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+        child: Container(
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(50),
+            border: !isGuardianMode
+                ? Border.all(color: Colors.grey.shade300)
+                : null,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withAlpha(35),
+                blurRadius: 12,
+                offset: const Offset(0, 5),
               ),
             ],
+          ),
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _NavItem(
+                  activeIcon: Icons.pie_chart,
+                  inactiveIcon: Icons.pie_chart_outline,
+                  label: 'Status',
+                  isSelected: selectedIndex == 0,
+                  onTap: () => onItemTapped(0),
+                  isGuardianMode: isGuardianMode,
+                ),
+                _NavItem(
+                  activeIcon: Icons.home,
+                  inactiveIcon: Icons.home_outlined,
+                  label: 'Home',
+                  isSelected: selectedIndex == 1,
+                  onTap: () => onItemTapped(1),
+                  isGuardianMode: isGuardianMode,
+                ),
+                _NavItem(
+                  activeIcon: Icons.person,
+                  inactiveIcon: Icons.person_outline,
+                  label: 'Profile',
+                  isSelected: selectedIndex == 2,
+                  onTap: () => onItemTapped(2),
+                  isGuardianMode: isGuardianMode,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -66,14 +78,16 @@ class AnimatedBottomNavBar extends StatelessWidget {
 }
 
 class _NavItem extends StatefulWidget {
-  final IconData icon;
+  final IconData activeIcon;
+  final IconData inactiveIcon;
   final String label;
   final bool isSelected;
   final VoidCallback onTap;
   final bool isGuardianMode;
 
   const _NavItem({
-    required this.icon,
+    required this.activeIcon,
+    required this.inactiveIcon,
     required this.label,
     required this.isSelected,
     required this.onTap,
@@ -88,24 +102,17 @@ class __NavItemState extends State<_NavItem>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
-  late Animation<Offset> _slideAnimation;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 300),
     );
 
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
-    );
-
-    _slideAnimation = Tween<Offset>(
-            begin: const Offset(0, 0), end: const Offset(0, -0.2))
-        .animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.1).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOutBack),
     );
   }
 
@@ -127,36 +134,45 @@ class __NavItemState extends State<_NavItem>
 
   @override
   Widget build(BuildContext context) {
-    final Color selectedColor =
-        widget.isGuardianMode ? Colors.white : const Color(0xFF153A5B);
-    final Color unselectedColor =
-        widget.isGuardianMode ? Colors.white.withAlpha(178) : Colors.grey[400]!;
+    final Color activeColor =
+        widget.isGuardianMode ? Colors.white : const Color(0xFF103554);
+    final Color inactiveColor = const Color(0xFFB0B0B0);
 
-    final color = widget.isSelected ? selectedColor : unselectedColor;
+    final color = widget.isSelected ? activeColor : inactiveColor;
+    final iconData =
+        widget.isSelected ? widget.activeIcon : widget.inactiveIcon;
 
-    return GestureDetector(
-      onTap: widget.onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: widget.isSelected
-              ? selectedColor.withAlpha(25)
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: SlideTransition(
-          position: _slideAnimation,
-          child: ScaleTransition(
-            scale: _scaleAnimation,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(widget.icon, color: color),
-                const SizedBox(height: 4),
-                Text(widget.label, style: TextStyle(color: color)),
-              ],
-            ),
+    return Expanded(
+      child: GestureDetector(
+        onTap: widget.onTap,
+        behavior: HitTestBehavior.opaque,
+        child: ScaleTransition(
+          scale: _scaleAnimation,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(iconData, color: color),
+              const SizedBox(height: 4),
+              Text(widget.label,
+                  style: TextStyle(
+                      color: color,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600)),
+              const SizedBox(height: 4),
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                height: 5,
+                width: 20,
+                decoration: BoxDecoration(
+                  color: widget.isSelected
+                      ? (widget.isGuardianMode
+                          ? activeColor
+                          : activeColor.withAlpha(50))
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ],
           ),
         ),
       ),

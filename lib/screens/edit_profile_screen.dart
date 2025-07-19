@@ -86,122 +86,129 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     final isGuardianMode =
         Provider.of<GuardianModeState>(context).isGuardianModeEnabled;
     final profileState = Provider.of<ProfileState>(context);
-    final theme = isGuardianMode
-        ? ThemeData.dark().copyWith(
-            primaryColor: const Color(0xFF14375F),
-            scaffoldBackgroundColor: const Color(0xFF102A43),
-            colorScheme:
-                const ColorScheme.dark().copyWith(secondary: Colors.cyanAccent),
-          )
-        : ThemeData.light();
-    final dividerColor =
-        isGuardianMode ? Colors.white24 : Colors.grey.shade300;
+
+    // Define Theme Colors
+    final Color backgroundColor =
+        isGuardianMode ? const Color(0xFF0F243D) : Colors.white;
+    final Color textColor = isGuardianMode ? Colors.white : Colors.black;
+    final Color fieldBackgroundColor =
+        isGuardianMode ? const Color(0xFF1C3B5A) : const Color(0xFFF5F5F5);
+    final Color dividerColor =
+        isGuardianMode ? const Color(0xFF345B78) : const Color(0xFFDDDDDD);
+    final Color accentColor =
+        isGuardianMode ? Colors.greenAccent : Colors.green;
 
     final currentImage =
         isGuardianMode ? profileState.guardianImage : profileState.userImage;
 
-    return Theme(
-      data: theme,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Account'),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-          actions: [
-            TextButton(
-              onPressed: _saveProfile,
-              child: Text(
-                'Done',
-                style: TextStyle(
-                    color: isGuardianMode ? Colors.white : Colors.red,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-          ],
+    return Scaffold(
+      backgroundColor: backgroundColor,
+      appBar: AppBar(
+        title: Text('Edit Profile', style: TextStyle(color: textColor)),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: textColor),
+          onPressed: () => Navigator.of(context).pop(),
         ),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: 20),
-              Center(
-                child: GestureDetector(
-                  onTap: _pickImage,
-                  child: Stack(
-                    children: [
-                      CircleAvatar(
-                        radius: 60,
-                        backgroundImage: _imageFile != null
-                            ? FileImage(_imageFile!)
-                            : (currentImage != null
-                                ? FileImage(currentImage)
-                                : const AssetImage('assets/logo.png'))
-                                as ImageProvider,
-                      ),
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: CircleAvatar(
-                          radius: 20,
-                          backgroundColor:
-                              isGuardianMode ? Colors.grey[800] : Colors.white,
-                          child: Icon(
-                            Icons.camera_alt,
-                            color: isGuardianMode ? Colors.white70 : Colors.black,
-                          ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.check, color: accentColor),
+            onPressed: _saveProfile,
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 20),
+            Center(
+              child: GestureDetector(
+                onTap: _pickImage,
+                child: Stack(
+                  children: [
+                    CircleAvatar(
+                      radius: 60,
+                      backgroundImage: _imageFile != null
+                          ? FileImage(_imageFile!)
+                          : (currentImage != null
+                              ? FileImage(currentImage)
+                              : const AssetImage('assets/TANAW-LOGO2.0.png'))
+                              as ImageProvider,
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: CircleAvatar(
+                        radius: 20,
+                        backgroundColor: fieldBackgroundColor,
+                        child: Icon(
+                          Icons.camera_alt,
+                          color: textColor.withOpacity(0.7),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 40),
-              _buildTextField(
-                  _nameController, 'Name', isGuardianMode),
-              const SizedBox(height: 20),
-              _buildTextField(
-                  _emailController, 'Mail Address', isGuardianMode),
-              const SizedBox(height: 20),
-              _buildTextField(
-                  _phoneController, 'Phone Number', isGuardianMode),
-              const SizedBox(height: 40),
-              Divider(color: dividerColor),
-              ListTile(
-                title: const Text(
-                  'Delete Account',
-                  style: TextStyle(color: Colors.red),
-                ),
-                onTap: () {
-                  // TODO: Implement delete account functionality
-                },
+            ),
+            const SizedBox(height: 40),
+            _buildTextField(
+                _nameController, 'Name', textColor, fieldBackgroundColor),
+            const SizedBox(height: 20),
+            _buildTextField(_emailController, 'E-mail address', textColor,
+                fieldBackgroundColor),
+            const SizedBox(height: 20),
+            _buildTextField(_phoneController, 'Phone number', textColor,
+                fieldBackgroundColor),
+            const SizedBox(height: 40),
+            Divider(color: dividerColor),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text(
+                'Delete Account',
+                style: TextStyle(color: Colors.redAccent),
               ),
-            ],
-          ),
+              onTap: () {
+                // TODO: Implement delete account functionality
+              },
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildTextField(
-      TextEditingController controller, String label, bool isGuardianMode) {
-    return TextField(
-      controller: controller,
-      style: TextStyle(color: isGuardianMode ? Colors.white : Colors.black),
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: TextStyle(color: isGuardianMode ? Colors.white70 : Colors.grey),
-        enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: isGuardianMode ? Colors.white24 : Colors.grey.shade300),
+  Widget _buildTextField(TextEditingController controller, String label,
+      Color textColor, Color fieldBackgroundColor) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: textColor.withOpacity(0.8),
+            fontWeight: FontWeight.w600,
+          ),
         ),
-        focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: isGuardianMode ? Colors.cyanAccent : const Color(0xFF153A5B)),
+        const SizedBox(height: 8),
+        TextField(
+          controller: controller,
+          style: TextStyle(color: textColor),
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: fieldBackgroundColor,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          ),
         ),
-      ),
+      ],
     );
   }
 } 

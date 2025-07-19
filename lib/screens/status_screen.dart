@@ -4,6 +4,7 @@ import 'package:tanaw_app/screens/home_screen.dart';
 import 'package:tanaw_app/screens/profile_screen.dart';
 import 'package:tanaw_app/state/guardian_mode_state.dart';
 import 'package:tanaw_app/widgets/animated_bottom_nav_bar.dart';
+import 'package:tanaw_app/widgets/app_logo.dart';
 import 'package:tanaw_app/widgets/fade_page_route.dart';
 import 'package:tanaw_app/screens/guardian_home_screen.dart';
 
@@ -60,37 +61,19 @@ class StatusScreenState extends State<StatusScreen> {
 
     return Scaffold(
       backgroundColor:
-          isGuardianMode ? const Color(0xFF102A43) : Colors.grey[100],
+          isGuardianMode ? const Color(0xFF102A43) : Colors.white,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor:
             isGuardianMode ? Colors.transparent : Colors.white,
-        elevation: isGuardianMode ? 0 : 2,
-        title: Padding(
-          padding: const EdgeInsets.only(top: 10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Image.asset('assets/logo.png', width: 35),
-              const SizedBox(height: 4),
-              Text(
-                'TANAW',
-                style: TextStyle(
-                  color: isGuardianMode ? Colors.white : Colors.black87,
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 2,
-                ),
-              ),
-            ],
-          ),
-        ),
+        elevation: 0,
+        title: AppLogo(isGuardianMode: isGuardianMode),
       ),
       body: ListView(
         padding: const EdgeInsets.all(20.0),
         children: [
           _buildInfoCard(
+            isGuardianMode: isGuardianMode,
             cardColor: cardColor,
             titleColor: cardTitleColor,
             contentColor: cardContentColor,
@@ -107,6 +90,7 @@ class StatusScreenState extends State<StatusScreen> {
           ),
           const SizedBox(height: 20),
           _buildInfoCard(
+            isGuardianMode: isGuardianMode,
             cardColor: cardColor,
             titleColor: cardTitleColor,
             contentColor: cardContentColor,
@@ -121,6 +105,7 @@ class StatusScreenState extends State<StatusScreen> {
           ),
           const SizedBox(height: 20),
           _buildInfoCard(
+            isGuardianMode: isGuardianMode,
             cardColor: cardColor,
             titleColor: cardTitleColor,
             contentColor: cardContentColor,
@@ -149,6 +134,7 @@ class StatusScreenState extends State<StatusScreen> {
   }
 
   Widget _buildInfoCard({
+    required bool isGuardianMode,
     required Color cardColor,
     required Color titleColor,
     required Color contentColor,
@@ -158,9 +144,12 @@ class StatusScreenState extends State<StatusScreen> {
   }) {
     return Card(
       color: cardColor,
-      elevation: 4,
-      shadowColor: Colors.black.withAlpha(51),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      elevation: isGuardianMode ? 4 : 2,
+      shadowColor: isGuardianMode ? Colors.black.withAlpha(51) : Colors.grey.withAlpha(100),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: isGuardianMode ? BorderSide.none : BorderSide(color: Colors.grey.shade300, width: 1),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(

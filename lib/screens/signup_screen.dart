@@ -36,13 +36,16 @@ class _SignupScreenState extends State<SignupScreen> {
           height: screenHeight,
           child: Stack(
             children: [
-              Align(
-                alignment: Alignment.topCenter,
-                child: Padding(
-                  padding: EdgeInsets.only(top: screenHeight * 0.1),
+              Container(
+                height: screenHeight * 0.4,
+                width: double.infinity,
+                color: const Color(0xFF153A5B),
+                child: Align(
+                  alignment: const Alignment(0.0, -0.2),
                   child: Image.asset(
-                    'assets/TANAW-LOGO2.0.png',
-                    height: 100,
+                    'assets/signuphello.png',
+                    fit: BoxFit.contain,
+                    width: double.infinity,
                   ),
                 ),
               ),
@@ -65,7 +68,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         const Text(
-                          'Create Account',
+                          'Be Part of Tanaw!',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 28,
@@ -75,7 +78,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Start your journey with us.',
+                          'A smarter way to see the world—together!',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 16,

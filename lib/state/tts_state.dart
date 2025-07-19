@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class TtsState with ChangeNotifier {
-  bool _isTtsEnabled = true;
+  bool _isTtsEnabled = false;
 
   bool get isTtsEnabled => _isTtsEnabled;
 

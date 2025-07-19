@@ -21,11 +21,19 @@ class LoginScreen extends StatelessWidget {
             height: screenHeight * 0.4,
             width: double.infinity,
             color: const Color(0xFF153A5B), // Tanaw blue
-            child: Center(
-              child: Image.asset(
-                'assets/logo.png',
-                height: 120,
-              ),
+            child: Stack(
+              children: [
+                Positioned(
+                  top: 10,
+                  bottom: 10,
+                  left: 0,
+                  right: 0,
+                  child: Image.asset(
+                    'assets/hellologin.png',
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ],
             ),
           ),
           // Bottom card form
@@ -47,7 +55,7 @@ class LoginScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const Text(
-                      'Welcome back!',
+                      'Hello Again!',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 28,
@@ -57,7 +65,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'We missed you.',
+                      'Welcome back you\'ve been missed!',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 16,
