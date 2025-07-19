@@ -20,6 +20,7 @@ class GuardianHomeScreenState extends State<GuardianHomeScreen>
   late AnimationController _animationController;
   final FlutterTts _flutterTts = FlutterTts();
   int _selectedIndex = 1;
+  int? _expandedIndex;
 
   void _onItemTapped(int index) {
     if (index == _selectedIndex) return;
@@ -220,19 +221,32 @@ class GuardianHomeScreenState extends State<GuardianHomeScreen>
       itemCount: _records.length,
       itemBuilder: (context, index) {
         final record = _records[index];
+        final isExpanded = _expandedIndex == index;
+
+        final Color cardColor =
+            isExpanded ? Colors.white : const Color(0xFFD6E9F8);
+        final Color textColor = const Color(0xFF173A5E);
+        final Color subtitleColor = Colors.grey.shade600;
 
         return Card(
           elevation: 2,
           margin: const EdgeInsets.symmetric(vertical: 6),
-          color: const Color(0xFF163C63),
+          color: cardColor,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: ExpansionTile(
-            leading: Icon(record['icon'], color: Colors.white, size: 32),
+            key: ValueKey(index),
+            initiallyExpanded: isExpanded,
+            onExpansionChanged: (expanded) {
+              setState(() {
+                _expandedIndex = expanded ? index : null;
+              });
+            },
+            leading: Icon(record['icon'], color: textColor, size: 32),
             title: Text(
               'Encountered: ${record['type']}',
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: textColor,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -240,30 +254,31 @@ class GuardianHomeScreenState extends State<GuardianHomeScreen>
               record['message'],
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontSize: 12, color: Colors.white70),
+              style: TextStyle(fontSize: 12, color: subtitleColor),
             ),
+            trailing: Icon(Icons.expand_more, color: textColor),
             children: [
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0, vertical: 12.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       record['message'],
-                      style: const TextStyle(color: Colors.white),
+                      style: TextStyle(color: textColor),
                     ),
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        const Icon(Icons.location_on_outlined,
-                            size: 14, color: Colors.white70),
+                        Icon(Icons.location_on_outlined,
+                            size: 14, color: subtitleColor),
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(
                             record['location'],
-                            style: const TextStyle(
-                                color: Colors.white70,
+                            style: TextStyle(
+                                color: subtitleColor,
                                 fontStyle: FontStyle.italic),
                           ),
                         ),
@@ -272,12 +287,12 @@ class GuardianHomeScreenState extends State<GuardianHomeScreen>
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        const Icon(Icons.access_time_filled_outlined,
-                            size: 14, color: Colors.white70),
+                        Icon(Icons.access_time_filled_outlined,
+                            size: 14, color: subtitleColor),
                         const SizedBox(width: 4),
                         Text(
                           record['time'],
-                          style: const TextStyle(color: Colors.white70),
+                          style: TextStyle(color: subtitleColor),
                         ),
                       ],
                     ),

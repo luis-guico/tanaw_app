@@ -125,32 +125,47 @@ class LanguageSettingsScreenState extends State<LanguageSettingsScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
       decoration: BoxDecoration(
-        color: isGuardianMode ? Colors.white.withAlpha(25) : Colors.grey.shade50,
+        color: isGuardianMode
+            ? Colors.white.withOpacity(0.1)
+            : Colors.grey.shade50,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isGuardianMode ? Colors.white30 : Colors.grey.shade300,
+          color:
+              isGuardianMode ? Colors.white.withOpacity(0.2) : Colors.grey.shade300,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      child: DropdownButton<String>(
-        value: _selectedLanguage,
-        isExpanded: true,
-        underline: const SizedBox(),
-        dropdownColor: isGuardianMode ? const Color(0xFF153A5B) : Colors.white,
-        icon: Icon(Icons.arrow_drop_down, color: textColor),
-        onChanged: (String? newValue) {
-          if (newValue != null) {
-            _updateLanguage(newValue);
-          }
-        },
-        items: _languages.map<DropdownMenuItem<String>>((String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(
-              value,
-              style: TextStyle(color: textColor, fontSize: 16),
-            ),
-          );
-        }).toList(),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: _selectedLanguage,
+          isExpanded: true,
+          dropdownColor:
+              isGuardianMode ? const Color(0xFF1E4872) : Colors.white,
+          icon: Icon(Icons.arrow_drop_down, color: textColor),
+          onChanged: (String? newValue) {
+            if (newValue != null) {
+              _updateLanguage(newValue);
+            }
+          },
+          items: _languages.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Text(
+                  value,
+                  style: TextStyle(color: textColor, fontSize: 16),
+                ),
+              ),
+            );
+          }).toList(),
+        ),
       ),
     );
   }

@@ -213,7 +213,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                   ),
                   child: Icon(
                     isEnabling
-                        ? Icons.shield_outlined
+                        ? Icons.family_restroom
                         : Icons.power_settings_new_rounded,
                     color: isEnabling ? accentColor : destructiveColor,
                     size: 40,
@@ -361,7 +361,7 @@ class ProfileScreenState extends State<ProfileScreen> {
             'Settings & More',
             [
               ListTile(
-                leading: const Icon(Icons.shield_outlined, color: Colors.white),
+                leading: const Icon(Icons.family_restroom, color: Colors.white),
                 title: const Text('Guardian Mode', style: TextStyle(color: Colors.white)),
                 trailing: Switch(
                   value: isGuardianMode,
