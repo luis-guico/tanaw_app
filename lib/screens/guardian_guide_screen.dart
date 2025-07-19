@@ -152,6 +152,8 @@ class GuardianGuideScreenState extends State<GuardianGuideScreen> {
             borderRadius: BorderRadius.circular(12),
           ),
           child: ExpansionTile(
+            iconColor: textColor,
+            collapsedIconColor: textColor,
             title: Text(
               item.question,
               style: TextStyle(

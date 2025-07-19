@@ -682,6 +682,7 @@ class ProfileScreenState extends State<ProfileScreen> {
       BuildContext context, IconData icon, String title, VoidCallback onTap,
       {bool isGuardianMode = false}) {
     final tileColor = isGuardianMode ? Colors.white : Colors.black;
+    final arrowColor = isGuardianMode ? Colors.white : tileColor.withAlpha(178);
 
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(vertical: 4),
@@ -691,7 +692,7 @@ class ProfileScreenState extends State<ProfileScreen> {
         style: TextStyle(color: tileColor, fontWeight: FontWeight.w500),
       ),
       trailing:
-          Icon(Icons.arrow_forward_ios, color: tileColor.withAlpha(178), size: 16),
+          Icon(Icons.arrow_forward_ios, color: arrowColor, size: 16),
       onTap: onTap,
     );
   }
