@@ -1,6 +1,6 @@
 # TANAW Mobile Application
 
-## 📱 App Overview
+## App Overview
 
 TANAW is a mobile application designed to assist visually impaired individuals by providing real-time obstacle detection and navigation guidance. It serves as an interface for smart glasses, offering a seamless and accessible user experience.
 
@@ -51,7 +51,7 @@ The app follows a logical flow:
 
 Here are the main screens and interface flow of the TANAW Mobile Application:
 
-### 🟦 Splash and Onboarding
+### Splash and Onboarding
 ![Splash and Onboarding Screens](assets/app-overview/splash-and-onboarding-screen.png)
 
 ### Login, Signup, and Password Recovery
