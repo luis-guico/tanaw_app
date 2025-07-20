@@ -47,6 +47,22 @@ The app follows a logical flow:
 
 *Note: Running on a real device is preferred for testing accessibility features like TalkBack.*
 
+## 📸 UI Preview
+
+Here are the main screens and interface flow of the TANAW Mobile Application:
+
+### 🟦 Splash and Onboarding
+![Splash and Onboarding Screens](assets/app-overview/splash-and-onboarding-screen.png)
+
+### 🟧 Login, Signup, and Password Recovery
+![Login and Signup Screens](assets/app-overview/login-signup-passwordrecovery-screen.png)
+
+### ⚪️ User Mode (Light Theme)
+![User Mode Screens](assets/app-overview/user-mode-screen.png)
+
+### 🔵 Guardian Mode (Dark Theme)
+![Guardian Mode Screens](assets/app-overview/guardian-mode-screen.png)
+
 ## 🚧 Known Limitations
 
 - **No Backend Integration:** The app does not yet connect to a backend or database.
