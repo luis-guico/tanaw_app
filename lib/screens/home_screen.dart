@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:tanaw_app/screens/profile_screen.dart';
 import 'package:tanaw_app/screens/status_screen.dart';
 import 'package:tanaw_app/state/guardian_mode_state.dart';
+import 'package:tanaw_app/state/tts_state.dart';
 import 'package:tanaw_app/widgets/animated_bottom_nav_bar.dart';
 import 'package:tanaw_app/widgets/app_logo.dart';
 import 'package:tanaw_app/widgets/fade_page_route.dart';
@@ -73,9 +74,9 @@ class HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onVerticalDragUpdate: _handleVerticalDragUpdate,
-      child: Scaffold(
+    final ttsState = Provider.of<TtsState>(context);
+
+    Widget screenContent = Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -106,6 +107,7 @@ class HomeScreenState extends State<HomeScreen> {
                 text: 'Disconnect\nGlasses',
                 onPressed: () => _speak("Disconnecting glasses"),
               ),
+
             ],
           ),
         ),
@@ -113,8 +115,16 @@ class HomeScreenState extends State<HomeScreen> {
           selectedIndex: _selectedIndex,
           onItemTapped: _onItemTapped,
         ),
-      ),
     );
+
+    if (ttsState.isTtsEnabled) {
+      return GestureDetector(
+        onVerticalDragUpdate: _handleVerticalDragUpdate,
+        child: screenContent,
+      );
+    } else {
+      return screenContent;
+    }
   }
 
   Widget _buildDeviceStatus() {
@@ -166,10 +176,13 @@ class HomeScreenState extends State<HomeScreen> {
             ),
           ),
           const SizedBox(height: 24),
-          Icon(
-            Icons.volume_up,
-            size: 50,
-            color: Colors.grey.shade700,
+          GestureDetector(
+            onTap: () => _speak("Last detected object was $_lastDetectedObject"),
+            child: Icon(
+              Icons.volume_up,
+              size: 50,
+              color: Colors.grey.shade700,
+            ),
           ),
         ],
       ),

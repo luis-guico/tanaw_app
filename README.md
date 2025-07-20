@@ -19,7 +19,7 @@ This document provides a detailed overview of the TANAW mobile application. It c
 - [Design Principles](#design-principles)
 - [UI Preview](#ui-preview)
 - [Known Limitations](#known-limitations)
-- [Developed By](#developed-by)
+- [Group Members](#group-members)
 
 ## About The Project
 
@@ -167,7 +167,7 @@ Here are the main screens and interface flow of the TANAW Mobile Application:
 - **No Backend Integration:** The app does not yet connect to a backend or database.
 - **Placeholder Data:** IoT hardware is not yet connected; placeholder data is used for demonstration.
 
-## Developed By
+## Group Members
 
 **BSIT - NETWORK TECHNOLOGY 3301**
 
