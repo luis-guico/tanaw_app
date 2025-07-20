@@ -8,7 +8,7 @@ TANAW is a mobile application designed to assist visually impaired individuals b
 - Visually impaired individuals
 - Their guardians
 
-## 💡 Key Features
+## Key Features
 
 - **Multi-page Navigation:** Intuitive navigation for both user and guardian modes.
 - **User and Guardian Modes:** Tailored experiences for primary users and their guardians.
@@ -18,13 +18,13 @@ TANAW is a mobile application designed to assist visually impaired individuals b
 - **Profile Management:** Easy-to-use profile and settings management.
 - **Accessibility Support:** Fully compatible with TalkBack and designed with large, high-contrast UI elements.
 
-## ⚙️ Technology Stack
+## Technology Stack
 
 - **Frontend:** Flutter
 
 *Note: Currently, the application is frontend-only. Backend services and hardware integration with IoT smart glasses are in progress. Full functionality depends on the physical connection of the glasses to the mobile app.*
 
-## 🧭 Navigation Structure
+## Navigation Structure
 
 The app follows a logical flow:
 1.  **Splash Screen**
@@ -32,13 +32,13 @@ The app follows a logical flow:
 3.  **Main Pages:** Home, Status, and Profile.
 4.  **Settings & More:** Edit Profile, Guardian Guide, Notification Settings.
 
-## 🖼️ Design Principles
+## Design Principles
 
 - **Minimalist & User-Friendly:** Clean layouts to ensure ease of use.
 - **Dual-Theme:** Light mode for the User and Dark mode for the Guardian.
 - **Visual Consistency:** Follows TANAW’s brand identity for a cohesive experience.
 
-## 🧪 How to Run the App
+## How to Run the App
 
 1.  **Clone the repository.**
 2.  **Ensure you have Flutter installed.** If not, follow the [official Flutter installation guide](https://flutter.dev/docs/get-started/install).
@@ -54,21 +54,21 @@ Here are the main screens and interface flow of the TANAW Mobile Application:
 ### 🟦 Splash and Onboarding
 ![Splash and Onboarding Screens](assets/app-overview/splash-and-onboarding-screen.png)
 
-### 🟧 Login, Signup, and Password Recovery
+### Login, Signup, and Password Recovery
 ![Login and Signup Screens](assets/app-overview/login-signup-passwordrecovery-screen.png)
 
-### ⚪️ User Mode (Light Theme)
+### User Mode (Light Theme)
 ![User Mode Screens](assets/app-overview/user-mode-screen.png)
 
-### 🔵 Guardian Mode (Dark Theme)
+### Guardian Mode (Dark Theme)
 ![Guardian Mode Screens](assets/app-overview/guardian-mode-screen.png)
 
-## 🚧 Known Limitations
+## Known Limitations
 
 - **No Backend Integration:** The app does not yet connect to a backend or database.
 - **Placeholder Data:** IoT hardware is not yet connected; placeholder data is used for demonstration.
 
-## 👥 Developed by:
+## Developed by:
 
 **BSIT - NETWORK TECHNOLOGY 3301**
 
