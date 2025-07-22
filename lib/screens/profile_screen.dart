@@ -43,6 +43,104 @@ class ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
+  void _showLogoutConfirmationDialog(BuildContext context, bool isGuardianMode) {
+    final dialogBackgroundColor = isGuardianMode ? const Color(0xFF1E4872) : Colors.white;
+    final titleTextColor = isGuardianMode ? Colors.white : Colors.black87;
+    final contentTextColor = isGuardianMode ? Colors.white70 : Colors.grey.shade600;
+    final destructiveColor = Colors.redAccent;
+
+    _ttsService.speak('Logout Confirmation');
+
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: const EdgeInsets.all(24),
+          child: Stack(
+            clipBehavior: Clip.none,
+            alignment: Alignment.topCenter,
+            children: [
+              Container(
+                margin: const EdgeInsets.only(top: 32),
+                padding: const EdgeInsets.fromLTRB(24, 48, 24, 24),
+                decoration: BoxDecoration(
+                  color: dialogBackgroundColor,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Logout',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: titleTextColor,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'Are you sure you want to logout?',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: contentTextColor, fontSize: 16),
+                    ),
+                    const SizedBox(height: 24),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: Text(
+                            'Cancel',
+                            style: TextStyle(color: contentTextColor, fontSize: 16),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        ElevatedButton(
+                          onPressed: () {
+                            Provider.of<GuardianModeState>(context, listen: false).setGuardianMode(false);
+                            Navigator.of(context).pop(); // Close the dialog
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(builder: (context) => const LoginScreen()),
+                              (Route<dynamic> route) => false,
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: destructiveColor,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                          ),
+                          child: const Text('Yes'),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Positioned(
+                top: 0,
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: dialogBackgroundColor,
+                    shape: BoxShape.circle,
+                    boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)],
+                  ),
+                  child: Icon(Icons.logout, color: destructiveColor, size: 40),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   void _onItemTapped(int index) {
     if (index == _selectedIndex) return;
 
@@ -402,11 +500,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                 );
               }, isGuardianMode: true),
               _buildSettingsTile(Icons.logout, 'Logout', () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  FadePageRoute(page: const LoginScreen()),
-                  (route) => false,
-                );
+                _showLogoutConfirmationDialog(context, true);
               }, isGuardianMode: true),
             ],
             isGuardianMode,
@@ -639,11 +733,7 @@ class ProfileScreenState extends State<ProfileScreen> {
               Icons.logout,
               'Logout',
               () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  FadePageRoute(page: const LoginScreen()),
-                  (route) => false,
-                );
+                _showLogoutConfirmationDialog(context, isGuardianMode);
               },
               isGuardianMode: isGuardianMode,
             ),

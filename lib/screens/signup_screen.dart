@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'home_screen.dart';
 import 'login_screen.dart';
+import 'account_created_screen.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -109,10 +109,10 @@ class _SignupScreenState extends State<SignupScreen> {
                         ElevatedButton(
                           onPressed: () {
                             HapticFeedback.lightImpact();
-                            Navigator.pushReplacement(
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const HomeScreen()),
+                                  builder: (context) => const AccountCreatedScreen()),
                             );
                           },
                           style: ElevatedButton.styleFrom(

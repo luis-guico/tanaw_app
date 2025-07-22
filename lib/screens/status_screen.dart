@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tanaw_app/screens/home_screen.dart';
 import 'package:tanaw_app/screens/profile_screen.dart';
 import 'package:tanaw_app/state/guardian_mode_state.dart';
+import 'package:tanaw_app/state/connection_state.dart' as app_connection;
 import 'package:tanaw_app/widgets/animated_bottom_nav_bar.dart';
 import 'package:tanaw_app/widgets/app_logo.dart';
 import 'package:tanaw_app/widgets/fade_page_route.dart';
@@ -52,6 +53,7 @@ class StatusScreenState extends State<StatusScreen> {
   Widget build(BuildContext context) {
     final isGuardianMode =
         Provider.of<GuardianModeState>(context).isGuardianModeEnabled;
+    final connectionState = Provider.of<app_connection.ConnectionState>(context);
 
     final cardColor =
         isGuardianMode ? const Color(0xFF163C63) : Colors.white;
@@ -80,8 +82,13 @@ class StatusScreenState extends State<StatusScreen> {
             title: 'Device Connection',
             icon: Icons.wifi_tethering_rounded,
             children: [
-              _buildInfoRow('Status', 'Connected', cardContentColor,
-                  Icons.check_circle, Colors.green),
+              _buildInfoRow(
+                'Status',
+                connectionState.isConnected ? 'Connected' : 'Disconnected',
+                cardContentColor,
+                connectionState.isConnected ? Icons.check_circle : Icons.cancel,
+                connectionState.isConnected ? Colors.green : Colors.red,
+              ),
               _buildInfoRow('Last Synced', '1 min ago', cardContentColor,
                   Icons.sync_rounded),
               _buildInfoRow('Signal Strength', 'Excellent', cardContentColor,
@@ -97,7 +104,7 @@ class StatusScreenState extends State<StatusScreen> {
             title: 'TANAW Glass Battery',
             icon: Icons.battery_charging_full_rounded,
             children: [
-              _buildInfoRow('Level', '92%', cardContentColor,
+              _buildInfoRow('Level', '80%', cardContentColor,
                   Icons.battery_6_bar_rounded, Colors.teal),
               _buildInfoRow(
                   'Status', 'Charging', cardContentColor, Icons.power_rounded),

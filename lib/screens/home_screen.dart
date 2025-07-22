@@ -9,6 +9,7 @@ import 'package:tanaw_app/state/tts_state.dart';
 import 'package:tanaw_app/widgets/animated_bottom_nav_bar.dart';
 import 'package:tanaw_app/widgets/app_logo.dart';
 import 'package:tanaw_app/widgets/fade_page_route.dart';
+import 'package:tanaw_app/state/connection_state.dart' as app_connection;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,7 +21,6 @@ class HomeScreen extends StatefulWidget {
 class HomeScreenState extends State<HomeScreen> {
   final FlutterTts _flutterTts = FlutterTts();
   final String _lastDetectedObject = "Garbage Bin";
-  final String _deviceStatus = "Connected";
   final String _batteryLevel = "80%";
   int _selectedIndex = 1;
 
@@ -75,6 +75,7 @@ class HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final ttsState = Provider.of<TtsState>(context);
+    final connectionState = Provider.of<app_connection.ConnectionState>(context);
 
     Widget screenContent = Scaffold(
         backgroundColor: Colors.white,
@@ -92,7 +93,7 @@ class HomeScreenState extends State<HomeScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              _buildDeviceStatus(),
+              _buildDeviceStatus(connectionState.isConnected),
               const SizedBox(height: 24),
               _buildDetectedObjectCard(),
               const SizedBox(height: 32),
@@ -103,9 +104,12 @@ class HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 16),
               _buildActionButton(
-                icon: Icons.bluetooth,
-                text: 'Disconnect\nGlasses',
-                onPressed: () => _speak("Disconnecting glasses"),
+                icon: connectionState.isConnected ? Icons.bluetooth : Icons.bluetooth_disabled,
+                text: connectionState.isConnected ? 'Disconnect\nGlasses' : 'Connect\nGlasses',
+                onPressed: () {
+                  _speak(connectionState.isConnected ? "Disconnecting glasses" : "Connecting glasses");
+                  connectionState.toggleConnection();
+                },
               ),
 
             ],
@@ -127,7 +131,11 @@ class HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Widget _buildDeviceStatus() {
+  Widget _buildDeviceStatus(bool isConnected) {
+    final statusText = isConnected ? 'Connected' : 'Disconnected';
+    final statusColor = isConnected ? Colors.green.shade700 : Colors.red.shade700;
+    final statusIcon = isConnected ? Icons.check_circle : Icons.cancel;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -139,15 +147,15 @@ class HomeScreenState extends State<HomeScreen> {
           ),
         ),
         Text(
-          _deviceStatus,
+          statusText,
           style: TextStyle(
-            color: Colors.green.shade700,
+            color: statusColor,
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(width: 8),
-        Icon(Icons.check_circle, color: Colors.green.shade700, size: 24),
+        Icon(statusIcon, color: statusColor, size: 24),
       ],
     );
   }

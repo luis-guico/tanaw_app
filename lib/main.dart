@@ -4,6 +4,7 @@ import 'package:tanaw_app/screens/splash_screen.dart';
 import 'package:tanaw_app/state/guardian_mode_state.dart';
 import 'package:tanaw_app/state/tts_state.dart';
 import 'package:tanaw_app/state/profile_state.dart';
+import 'package:tanaw_app/state/connection_state.dart' as app_connection;
 
 void main() {
   runApp(
@@ -12,6 +13,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => GuardianModeState()),
         ChangeNotifierProvider(create: (_) => TtsState()),
         ChangeNotifierProvider(create: (_) => ProfileState()),
+        ChangeNotifierProvider(create: (_) => app_connection.ConnectionState()),
       ],
       child: const MyApp(), 
     ),
