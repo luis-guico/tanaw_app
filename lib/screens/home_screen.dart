@@ -186,10 +186,13 @@ class HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 24),
           GestureDetector(
             onTap: () => _speak("Last detected object was $_lastDetectedObject"),
-            child: Icon(
-              Icons.volume_up,
-              size: 50,
-              color: Colors.grey.shade700,
+            child: Semantics(
+              label: 'Speak Last Detection',
+              child: Icon(
+                Icons.volume_up,
+                size: 50,
+                color: Colors.grey.shade700,
+              ),
             ),
           ),
         ],
